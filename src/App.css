@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Tambahkan ke file CSS Anda */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    /* Memungkinkan scroll horizontal saat lebar tabel lebih besar dari layar */
+}
+
+table {
+    width: 100%;
+    /* Buat tabel 100% lebar dari kontainer */
+    border-collapse: collapse;
+    /* Hapus spasi antara sel */
+}
+
+th,
+td {
+    padding: 12px;
+    /* Padding di dalam sel */
+    text-align: left;
+    /* Penataan teks di dalam sel */
+}
+
+thead th {
+    background-color: #f8f8f8;
+    /* Warna latar untuk header */
+}
