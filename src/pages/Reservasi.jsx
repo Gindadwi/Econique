@@ -29,7 +29,8 @@ const Reservasi = () => {
       try {
         const response = await axios.get('https://econique-perhutani-default-rtdb.firebaseio.com/ReservasiKegiatan.json?auth=oahZAHcmPhj9gDp0HdkDFaCuGRt2pPZrX05YsdIl');
         const dataArray = Object.entries(response.data).map(([key, value]) => ({ id: key, ...value }));
-        setFilterData(dataArray);
+        setReservasiData(dataArray);  // Simpan data API ke reservasiData
+        setFilterData(dataArray);     // Awalnya, tampilkan semua data
       } catch (error) {
         console.error("Error fetching reservasi data:", error);
       } finally {
@@ -45,6 +46,12 @@ const Reservasi = () => {
 
   // Membuat fungsi Pencarian  
   const handleSearch = (searchTerm) => {
+    if (!searchTerm) {
+      toast.error('Isi Kolom Pencarian');
+      setFilterData(reservasiData); // Reset ke data awal jika pencarian kosong
+      return;
+    }
+
     const lowercasedTerm = searchTerm.toLowerCase();
     const filtered = reservasiData.filter((reservasi) =>
       (reservasi.startDate && reservasi.startDate.includes(lowercasedTerm)) ||
@@ -54,10 +61,6 @@ const Reservasi = () => {
     );
 
     setFilterData(filtered);
-    if (!searchTerm) {
-      toast.error('Isi Kolom Pencarian');
-      return;
-    }
 
     if (filtered.length === 0) {
       toast.error('Data tidak ditemukan');
@@ -65,6 +68,7 @@ const Reservasi = () => {
       toast.dismiss();
     }
   };
+
 
   // Akhir Membuat Fungsi Pencarian
 
@@ -103,8 +107,7 @@ const Reservasi = () => {
     const csvHeaders = "Tanggal Mulai; Tanggal Selesai; Nama; Alamat; Nama Kegiatan; Tempat; Jumlah Orang; Sales; Status; Nominal Bayar\n";
 
     const csvContent = csvHeaders + filteredData.map(reservasi =>
-      `${reservasi.startDate};${reservasi.finishDate};${reservasi.namaCustomer};${reservasi.alamat};${reservasi.nameKegiatan};
-      ${reservasi.wisata?.namaWisata && reservasi.wisata?.tempatWisata ? `${reservasi.wisata.namaWisata} - ${reservasi.wisata.tempatWisata.join(", ")}` : ""};${reservasi.jumlahPeserta};${reservasi.sales};${reservasi.selectedStatus};${reservasi.Omzet}`
+      `${reservasi.startDate};${reservasi.finishDate};${reservasi.namaCustomer};${reservasi.alamat};${reservasi.nameKegiatan};${reservasi.wisata?.namaWisata && reservasi.wisata?.tempatWisata ? `${reservasi.wisata.namaWisata} - ${reservasi.wisata.tempatWisata.join(", ")}` : ""};${reservasi.jumlahPeserta};${reservasi.sales};${reservasi.selectedStatus};${reservasi.Omzet}`
     ).join("\n");
 
     const encodeUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
@@ -181,12 +184,12 @@ const Reservasi = () => {
 
 
   return (
-    <div className='min-w-[360px]  '>
-      <div className='bg-white lg:w-screen sticky top-0 z-10 w-full items-center justify-start flex p-4 h-[63px]'>
+    <div className='min-w-[460px]'>
+      <div className='bg-white lg:w-screen w-screen items-center sticky top-0 z-10 justify-start flex p-4 h-[63px]'>
         <h1 className='font-outfit text-lg lg:text-2xl font-medium'>Reservasi Kegiatan</h1>
       </div>
 
-      <div className='mx-auto mt-5 w-full px-2 lg:px-5 min-w-[1020px] max-w-[1920px] lg:mx-auto '>
+      <div className='mx-auto mt-5 w-full px-2 lg:px-5 lg:min-w-[1020px] lg:max-w-[1920px] lg:mx-auto '>
         {/* Button fungsi */}
         <div className='lg:mt-10  flex flex-col lg:flex lg:flex-row gap-3'>
           <Search onSearch={handleSearch} />
@@ -246,7 +249,7 @@ const Reservasi = () => {
 
 
         {/* Membuat Loading */}
-        <div className='rounded-xl relative overflow-x-auto max-w-[270px] lg:max-w-[1080px] pr-2 flex mt-2'>
+        <div className='rounded-xl relative lg:min-w-[460px] lg:max-w-[1080px] pr-2 flex mt-2'>
           <div>
             {loading ? (
               <div className='flex justify-center mt-10'>
@@ -254,20 +257,20 @@ const Reservasi = () => {
               </div>
             ) : (
               // Membuat Tabel reservasi
-                <div className='container w-full relative rounded-xl flex items-start justify-start lg:items-center lg:justify-center gap-1 mt-5'>
-                  <div className='bg-white rounded-xl shadow-lg mx-auto w-full max-w-full lg:max-w-7xl'>
+                <div className='container w-auto min-w-[460px] relative rounded-xl flex items-start justify-start lg:items-center lg:justify-center gap-1 mt-5'>
+                  <div className='bg-white rounded-xl shadow-lg lg:max-w-7xl'>
                     {/* Membungkus tabel dengan div untuk scroll horizontal */}
                     <div className="relative flex items-start justify-start w-full"> {/* Tambahkan w-full agar mengambil seluruh lebar layar */}
-                      <div className="relative overflow-x-auto overflow-y-auto max-w-[568px] max-h-[500px] lg:max-w-[1080px] lg:max-h-[400px]"> {/* Pastikan max-w-full untuk layar kecil */}
+                      <div className="relative overflow-x-auto overflow-y-auto min-w-[100px] max-w-[360px] max-h-[500px] lg:max-w-[1080px] lg:max-h-[400px]"> {/* Pastikan max-w-full untuk layar kecil */}
                         <table className='w-full table-auto leading-normal'>
                           <thead className='bg-white text-black uppercase text-sm font-poppins leading-normal sticky top-0 z-10'>
                             <tr>
                               <th className="px-6 lg:px-6 lg:py-4 text-left font-outfit font-medium lg:font-bold">Tanggal Mulai</th>
-                              <th className="px-6 lg:px-6 lg:py-4 text-left font-outfit font-medium lg:font-bold">Nama</th>
-                              <th className="px-6 lg:px-6 lg:py-4 text-left font-outfit font-medium lg:font-bold">Tempat</th>
-                              <th className="px-6 lg:px-6 lg:py-4 text-left font-outfit font-medium lg:font-bold">Sales</th>
-                              <th className="px-6 lg:px-6 lg:py-4 text-left font-outfit font-medium lg:font-bold">Omzet</th>
-                              <th className="px-6 lg:px-6 lg:py-4 text-left font-outfit font-medium lg:font-bold">Status</th>
+                              <th className="px-4 lg:px-6 lg:py-4 text-left font-outfit font-medium lg:font-bold">Nama</th>
+                              <th className="px-4 lg:px-6 lg:py-4 text-left font-outfit font-medium lg:font-bold">Tempat</th>
+                              <th className="px-4 lg:px-6 lg:py-4 text-left font-outfit font-medium lg:font-bold">Sales</th>
+                              <th className="px-4 lg:px-6 lg:py-4 text-left font-outfit font-medium lg:font-bold">Omzet</th>
+                              <th className="px-4 lg:px-6 lg:py-4 text-left font-outfit font-medium lg:font-bold">Status</th>
                               <th className="px-6 lg:px-6 lg:py-4 text-left font-outfit font-medium lg:font-bold"></th>
                             </tr>
                           </thead>
@@ -276,11 +279,11 @@ const Reservasi = () => {
                             {filterData.map((reservasi, index) => (
                               <tr key={reservasi.id} className={`border-b border-gray-200 hover:bg-gray-100 ${index % 2 === 0 ? 'bg-green-100' : 'bg-white'}`}>
                                 <td className="px-3 lg:px-6 lg:py-4 text-left font-outfit font-normal lg:font-medium">{reservasi.startDate}</td>
-                                <td className="px-6 lg:px-6 lg:py-4 text-left font-outfit font-normal lg:font-medium">{reservasi.namaCustomer}</td>
-                                <td className="px-6 lg:px-6 lg:py-4 text-left font-outfit font-normal lg:font-medium">  {reservasi.wisata?.namaWisata && reservasi.wisata?.tempatWisata ?`${reservasi.wisata.namaWisata} - ${reservasi.wisata.tempatWisata.join(", ")}` : ""}</td>
-                                <td className="px-6 lg:px-6 lg:py-4 text-left font-outfit font-normal lg:font-medium">{reservasi.sales}</td>
-                                <td className="px-6 lg:px-6 lg:py-4 text-left font-outfit font-normal lg:font-medium">{reservasi.omzet}</td>
-                                <td className="px-6 lg:px-6 lg:py-4 text-left font-outfit font-normal lg:font-medium">{reservasi.selectedStatus}</td>
+                                <td className="px-4 lg:px-6 lg:py-4 text-left font-outfit font-normal lg:font-medium">{reservasi.namaCustomer}</td>
+                                <td className="px-4 lg:px-6 lg:py-4 text-left font-outfit font-normal lg:font-medium">  {reservasi.wisata?.namaWisata && reservasi.wisata?.tempatWisata ?`${reservasi.wisata.namaWisata} - ${reservasi.wisata.tempatWisata.join(", ")}` : ""}</td>
+                                <td className="px-4 lg:px-6 lg:py-4 text-left font-outfit font-normal lg:font-medium">{reservasi.sales}</td>
+                                <td className="px-4 lg:px-6 lg:py-4 text-left font-outfit font-normal lg:font-medium">{reservasi.omzet}</td>
+                                <td className="px-4 lg:px-6 lg:py-4 text-left font-outfit font-normal lg:font-medium">{reservasi.selectedStatus}</td>
                                 <td className="flex flex-col lg:flex-row gap-3 items-center justify-center mt-3">
                                   <button className="" onClick={() => Navigate(`/detailData/${reservasi.id}`)}>
                                     <img className='w-[20px]' src={Edit} alt="Edit" />
