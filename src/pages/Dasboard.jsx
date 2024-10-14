@@ -60,7 +60,7 @@ export default function Dashboard() {
                 <h1 className='font-outfit text-[18px] lg:text-2xl font-medium'>Dashboard</h1>
             </div>
 
-            <div className="relative overflow-x-auto lg:overflow-x-hidden w-full lg:my-7">
+            <div className="relative overflow-x-auto lg:overflow-x-hidden w-full lg:my-2">
                 {/* Konten dengan lebar minimum yang lebih besar dari viewport */}
                 <div className="w-[450px] lg:max-w-[1080px] lg:w-full px-4 mr-24">
                     {/* Grid layout untuk item-item */}

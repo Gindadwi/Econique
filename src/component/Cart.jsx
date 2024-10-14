@@ -96,8 +96,8 @@ const BarChartMobile = () => {
             <h2 className="text-lg font-semibold mb-4">Grafik Pesanan</h2>
 
             {/* Filter Tahun */}
-            <div className="mb-4">
-                <label htmlFor="yearFilter" className="block text-sm font-medium text-gray-700">
+            <div className="mb-4 flex flex-row items-center justify-center">
+                <label htmlFor="yearFilter" className="block text-sm w-36 font-medium text-gray-700">
                     Pilih Tahun:
                 </label>
                 <select

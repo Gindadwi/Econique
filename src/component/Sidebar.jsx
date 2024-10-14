@@ -1,9 +1,10 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import LogoPerhutani from '../assets/LogoPerhutani.png';
 
 export default function Sidebar() {
     const navigate = useNavigate();
+    const location = useLocation(); // Mengambil rute aktif
     const [isSidebarSmall, setIsSidebarSmall] = useState(true);
 
     const Menu = [
@@ -15,6 +16,14 @@ export default function Sidebar() {
     const toggleSidebar = () => {
         setIsSidebarSmall(!isSidebarSmall);
     };
+
+    // Otomatis masuk ke dasboard saat masuk ke admin
+    // Navigasi ke dashboard hanya jika berada di halaman root ("/")
+    useEffect(() => {
+        if (location.pathname === "/") {
+            navigate("/dasboard");
+        }
+    }, [location, navigate]);
 
     return (
         <div className={`bg-white h-screen p-5 transition-all duration-300 
