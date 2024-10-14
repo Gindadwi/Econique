@@ -56,8 +56,9 @@ const EditData = () => {
         setNameKegiatan(foundData.nameKegiatan);
         setSelectedWisata({
           wisata: { label: foundData.wisata.namaWisata },
-          tempat: foundData.wisata.tempatWisata.map(tempat => ({ label: tempat }))
+          tempat: foundData.wisata.tempatWisata.map(tempat => ({ label: tempat, selected: false }))
         });
+
         setJumlahPeserta(foundData.jumlahPeserta);
         setSales(foundData.sales);
         setJumlahDp(foundData.jumlahDp);
@@ -98,7 +99,7 @@ const EditData = () => {
 
     // Add checks for wisata
     const wisataNama = selectedWisata.wisata ? selectedWisata.wisata.label : "";
-    const wisataTempat = selectedWisata.tempat ? selectedWisata.tempat.map(t => t.label) : [];  // Default to empty array if undefined
+    const wisataTempat = selectedWisata.wisata ? selectedWisata.tempat.map(t => t.label) : [];  // Default to empty array if undefined
 
     const updatedData = {
       ...data, // Keep existing data
