@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import LogoPerhutani from '../assets/LogoPerhutani.png';
+import Econique from '../assets/Econique.png';
+import ButtonNav from '../assets/ButtonNav.png'
 
 export default function Sidebar() {
     const navigate = useNavigate();
@@ -26,14 +27,14 @@ export default function Sidebar() {
     }, [location, navigate]);
 
     return (
-        <div className={`bg-white h-screen p-5 transition-all duration-300 
-                        ${isSidebarSmall ? 'w-[80px]' : 'w-[240px]'} lg:w-[256px]`}>
-            <div className={`transition-all duration-300 ${isSidebarSmall ? 'w-[50px]' : 'w-[200px]'} lg:w-[222px]`}>
-                <div className="lg:items-center lg:justify-center flex cursor-pointer" onClick={toggleSidebar}>
-                    <img className={`transition-all duration-300 ${isSidebarSmall ? 'w-[40px]' : 'w-[150px]'} lg:w-[150px]`} src={LogoPerhutani} alt="Logo Perhutani" />
+        <>        
+        <div className={`lg:bg-white bg-white lg:h-screen lg:p-5 lg:transition-all duration-300 lg:w-[256px]`}>
+            <div className={`lg:transition-all duration-300  lg:w-[222px]`}>
+                <div className="lg:items-center lg:justify-center flex lg:cursor-pointer" onClick={toggleSidebar}>
+                    <img className={`transition-all duration-300 lg:w-[150px] hidden lg:block`} src={Econique} alt="Logo Perhutani" />
                 </div>
 
-                <ul className={`space-y-2 lg:items-center lg:justify-center mt-10 ${isSidebarSmall ? 'hidden' : 'block'} lg:block`}>
+                <ul className={`lg:space-y-2 lg:items-center lg:justify-center mt-10 hidden lg:block `}>
                     {Menu.map((menu, index) => (
                         <li
                             key={index}
@@ -46,6 +47,10 @@ export default function Sidebar() {
                     ))}
                 </ul>
             </div>
+
         </div>
+            
+
+        </>
     );
 }

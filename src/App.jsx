@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'; 
+import { Routes, Route, useLocation } from 'react-router-dom'; 
 import './App.css'
 import Sidebar  from './component/Sidebar';
 import Reservasi from './pages/Reservasi';
@@ -7,15 +7,40 @@ import TambahData from './pages/TambahData';
 import Detail from './pages/Detail'
 import Akses  from './pages/Akses';
 import { Toaster } from 'react-hot-toast'; 
+import Login from './pages/Login';
+import { useState } from 'react';
+import NavMenu from './component/NavMenu'
 
 function App() {
-  return (
-    <div className='flex h-screen overflow-hidden bg-DasarBg'>
-      <Toaster />      
-      <Sidebar/>
+  const location = useLocation();
+  const [open, setOpen] = useState();
 
-      <div className='flex-grow overflow-y-auto w-full min-w-[360px] '>
+  const isLoginPage = location.pathname === ('/');
+
+
+
+  return (
+    <div className='flex flex-col lg:flex-row h-screen overflow-hidden bg-DasarBg'>
+      <Toaster /> 
+
+      {/* NavMenu hanya muncul di mobile */}
+      {!isLoginPage && (
+        <div className="lg:hidden ">
+          <NavMenu />
+        </div>
+      )}
+
+      {!isLoginPage && (
+        <>
+          <Sidebar open={open} setOpen={setOpen} />
+        </>
+      )}
+
+
+      <div className='lg:flex-grow lg:overflow-y-auto lg:w-full lg:min-w-[360px] '>
         <Routes>
+          <Route path="/" element={<Login/>} />
+          <Route path="/navmenu" element={<NavMenu/>} />
           <Route path="/reservasi" element={<Reservasi />} />
           <Route path="/dasboard" element={<Dasboard />} />
           <Route path="/tambahData" element={<TambahData />} />

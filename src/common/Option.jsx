@@ -3,12 +3,12 @@ import React from 'react'
 const Option = ({ options, value, onChange, name }) => {
 
     return (
-        <div className='flex flex-col'>
+        <div className='grid grid-cols-1'>
 
             <select
                 value={value}
                 onChange={onChange}
-                className={`w-[270px] bg-white lg:w-80 h-14 rounded-xl px-3 font-outfit border border-1 border-black ${value === '' ? 'text-gray-400' : 'text-black'}`}
+                className={`w-full bg-white lg:w-80 h-14 rounded-md px-3 font-outfit border border-1 border-black ${value === '' ? 'text-gray-400' : 'text-black'}`}
                 >
 
                  <option value="" className='text-gray-400'>

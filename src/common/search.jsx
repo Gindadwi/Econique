@@ -20,7 +20,7 @@ export default function Search({ onSearch }) { // Mengubah nama fungsi dan menam
             <form className="flex gap-2 lg:gap-4" onSubmit={handleSearch}> {/* Menggunakan onSubmit di sini */}
                 <input
                     type="text"
-                    className=" w-[200px] h-9 lg:w-[486px] lg:h-14 p-2 rounded-md border text-[12px] lg:text-xl border-black border-1 font-outfit"
+                    className=" w-full h-9 lg:w-[486px] lg:h-14 p-2 rounded-md border text-[12px] lg:text-xl border-black border-1 font-outfit"
                     placeholder="Pencarian"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}

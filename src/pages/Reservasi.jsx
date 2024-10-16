@@ -19,6 +19,9 @@ const Reservasi = () => {
   const [DownloadOption, setDownloadOption] = useState(); // State untuk menunjukkan opsi download
   const downloadRef = useRef(null); // Ref untuk mendeteksi klik di luar opsi download
   const Navigate = useNavigate(); // Hook untuk navigasi halaman
+  const [selectedYear, setSelectedYear] = useState('');
+
+
 
   // Memanggil data dari API menggunakan Axios saat komponen di-mount
   useEffect(() => {
@@ -57,31 +60,42 @@ const Reservasi = () => {
   // Fungsi untuk melakukan pencarian
   const handleSearch = (searchTerm) => {
     if (!searchTerm) {
-      toast.error('Isi Kolom Pencarian'); // Menampilkan notifikasi jika kolom kosong
-      setFilterData(reservasiData); // Reset ke data awal jika pencarian kosong
+      toast.error('Isi Kolom Pencarian');
+      setFilterData(reservasiData); // Reset data jika input pencarian kosong
       return;
     }
 
-    const lowercasedTerm = searchTerm.toLowerCase(); // Mengubah input menjadi lowercase untuk pencarian
-    const monthNumber = SearchMount[lowercasedTerm]; // Konversi nama bulan menjadi nomor bulan
+    const lowercasedTerm = searchTerm.toLowerCase();
+    const searchTerms = lowercasedTerm.split(' '); // Memisahkan input menjadi array [bulan, tahun]
+    const searchMonth = searchTerms[0]; // Bulan yang dicari
+    const searchYear = searchTerms[1]; // Tahun yang dicari (opsional)
 
-    // Filter data berdasarkan input pencarian (bulan, nama, tempat, dll)
+    const monthNumber = SearchMount[searchMonth]; // Mendapatkan nomor bulan berdasarkan input bulan
+
+    // Filter data berdasarkan input pencarian (bulan dan tahun)
     const filtered = reservasiData.filter((reservasi) => {
-      const reservasiMonth = new Date(reservasi.startDate).getMonth() + 1; // Mendapatkan bulan dari tanggal
-      const formattedMonth = reservasiMonth < 10 ? `0${reservasiMonth}` : `${reservasiMonth}`; // Format bulan dengan dua digit
+      const reservasiDate = new Date(reservasi.startDate);
+      const reservasiMonth = reservasiDate.getMonth() + 1; // Mendapatkan bulan dari tanggal
+      const reservasiYear = reservasiDate.getFullYear(); // Mendapatkan tahun dari tanggal
+
+      const formattedMonth = reservasiMonth < 10 ? `0${reservasiMonth}` : `${reservasiMonth}`; // Format bulan jadi dua digit
+
+      const isMonthMatch = monthNumber && formattedMonth === monthNumber;
+      const isYearMatch = searchYear ? reservasiYear === parseInt(searchYear) : true;
+
       return (
-        (reservasi.startDate && reservasi.startDate.includes(lowercasedTerm)) || // Pencarian berdasarkan tanggal
-        (reservasi.namaCustomer && reservasi.namaCustomer.toLowerCase().includes(lowercasedTerm)) || // Pencarian berdasarkan nama customer
-        (reservasi.tempat && reservasi.tempat.toLowerCase().includes(lowercasedTerm)) || // Pencarian berdasarkan tempat
-        (reservasi.nameKegiatan && reservasi.nameKegiatan.toLowerCase().includes(lowercasedTerm)) || // Pencarian berdasarkan nama kegiatan
-        (monthNumber && formattedMonth === monthNumber) // Pencarian berdasarkan bulan
+        (reservasi.startDate && reservasi.startDate.includes(lowercasedTerm)) ||
+        (reservasi.namaCustomer && reservasi.namaCustomer.toLowerCase().includes(lowercasedTerm)) ||
+        (reservasi.tempat && reservasi.tempat.toLowerCase().includes(lowercasedTerm)) ||
+        (reservasi.nameKegiatan && reservasi.nameKegiatan.toLowerCase().includes(lowercasedTerm)) ||
+        (isMonthMatch && isYearMatch) // Pencarian berdasarkan bulan dan tahun
       );
     });
 
-    setFilterData(filtered); // Menyimpan hasil filter ke state
+    setFilterData(filtered);
 
     if (filtered.length === 0) {
-      toast.error('Data Bulan ini tidak ditemukan'); // Menampilkan pesan jika data tidak ditemukan
+      toast.error('Data tidak ditemukan untuk bulan dan tahun ini');
     } else {
       toast.dismiss(); // Menghilangkan notifikasi
     }
@@ -103,83 +117,68 @@ const Reservasi = () => {
     { value: '12', label: 'Desember' },
   ];
 
-  // Fungsi untuk download CSV
+  // Extract unique years from reservasiData
+  const yearOption = [...new Set(reservasiData.map((reservasi) => {
+    const dateObj = new Date(reservasi.startDate);
+    return dateObj.getFullYear();
+  }))];
+
   const handleDownloadCSV = () => {
     const filteredData = reservasiData.filter((reservasi) => {
       const dateObj = new Date(reservasi.startDate);
-      return dateObj.getMonth() + 1 === parseInt(selectedMonth); // Filter berdasarkan bulan yang dipilih
+      return dateObj.getMonth() + 1 === parseInt(selectedMonth) && dateObj.getFullYear() === parseInt(selectedYear);
     });
 
     if (filteredData.length === 0) {
-      toast.error('Tidak ada data untuk bulan yang dipilih'); // Pesan error jika data tidak ada
+      toast.error('Tidak ada data untuk bulan dan tahun yang dipilih');
       return;
     }
 
-    // Header CSV
     const csvHeaders = "Tanggal Mulai; Tanggal Selesai; Nama; Alamat; Nama Kegiatan; Tempat; Jumlah Orang; Sales; Status; Nominal Bayar\n";
-
-    // Konten CSV
     const csvContent = csvHeaders + filteredData.map(reservasi =>
       `${reservasi.startDate};${reservasi.finishDate};${reservasi.namaCustomer};${reservasi.alamat};${reservasi.nameKegiatan};${reservasi.wisata?.namaWisata && reservasi.wisata?.tempatWisata ? `${reservasi.wisata.namaWisata} - ${reservasi.wisata.tempatWisata.join(", ")}` : ""};${reservasi.jumlahPeserta};${reservasi.sales};${reservasi.selectedStatus};${reservasi.Omzet}`
     ).join("\n");
 
-    const encodeUri = encodeURI("data:text/csv;charset=utf-8," + csvContent); // Encode konten CSV
-    const link = document.createElement("a"); // Membuat link download
+    const encodeUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
+    const link = document.createElement("a");
     link.setAttribute("href", encodeUri);
-    link.setAttribute("download", `reservasi_data_${selectedMonth}.csv`); // Nama file CSV
+    link.setAttribute("download", `reservasi_data_${selectedYear}_${selectedMonth}.csv`);
     document.body.appendChild(link);
-    link.click(); // Mengunduh file CSV
+    link.click();
   };
 
-  // Fungsi untuk download PDF
   const handleDownloadPDF = () => {
     const filteredData = reservasiData.filter((reservasi) => {
       const dateObj = new Date(reservasi.startDate);
-      return dateObj.getMonth() + 1 === parseInt(selectedMonth); // Filter berdasarkan bulan yang dipilih
+      return dateObj.getMonth() + 1 === parseInt(selectedMonth) && dateObj.getFullYear() === parseInt(selectedYear);
     });
 
     if (filteredData.length === 0) {
-      toast.error('Tidak ada data untuk bulan yang dipilih'); // Pesan error jika tidak ada data
+      toast.error('Tidak ada data untuk bulan dan tahun yang dipilih');
       return;
     }
 
-    const doc = new jsPDF(); // Membuat dokumen PDF
-    doc.text('Data Reservasi', 14, 16); // Menambahkan teks judul
-
-    // Konten tabel dalam PDF
-    const dataTable = filteredData.map((reservasi) => [
-      reservasi.startDate,
-      reservasi.namaCustomer,
-      reservasi.alamat,
-      reservasi.nameKegiatan,
-      reservasi.wisata?.namaWisata && reservasi.wisata?.tempatWisata ? `${reservasi.wisata.namaWisata} - ${reservasi.wisata.tempatWisata.join(", ")}` : "",
-      reservasi.jumlahPeserta,
-      reservasi.sales,
-      reservasi.selectedStatus,
-      reservasi.Omzet,
-    ]);
-
-    // Header tabel PDF
-    const tableHeaders = [
-      "Tanggal Mulai",
-      "Nama",
-      "Alamat",
-      "Nama Kegiatan",
-      "Tempat",
-      "Jumlah Orang",
-      "Sales",
-      "Status",
-      "Nominal Bayar"
-    ];
-
+    const doc = new jsPDF();
     doc.autoTable({
-      head: [tableHeaders], // Menambahkan header ke tabel
-      body: dataTable, // Menambahkan data ke tabel
-      startY: 20, // Posisi tabel setelah judul
+      head: [['Tanggal Mulai', 'Tanggal Selesai', 'Nama', 'Alamat', 'Nama Kegiatan', 'Tempat', 'Jumlah Orang', 'Sales', 'Status', 'Nominal Bayar']],
+      body: filteredData.map(reservasi => [
+        reservasi.startDate,
+        reservasi.finishDate,
+        reservasi.namaCustomer,
+        reservasi.alamat,
+        reservasi.nameKegiatan,
+        reservasi.wisata?.namaWisata && reservasi.wisata?.tempatWisata ? `${reservasi.wisata.namaWisata} - ${reservasi.wisata.tempatWisata.join(", ")}` : "",
+        reservasi.jumlahPeserta,
+        reservasi.sales,
+        reservasi.selectedStatus,
+        reservasi.Omzet,
+      ])
     });
-
-    doc.save(`reservasi_data_${selectedMonth}.pdf`); // Mengunduh PDF dengan nama file
+    doc.save(`reservasi_data_${selectedYear}_${selectedMonth}.pdf`);
   };
+
+  //Akhir kode 
+
 
   // Fungsi untuk mendeteksi klik di luar opsi download
   const handleClickOutside = (event) => {
@@ -195,65 +194,82 @@ const Reservasi = () => {
     };
   }, []);
 
-// Render halaman reservasi
+  // Render halaman reservasi
 
 
 
 
   return (
     <div className=''>
-      <div className='bg-white w-screen items-center justify-start flex p-4 h-[63px] sticky top-0 z-20'>
-        <h1 className='font-outfit text-[18px] lg:text-2xl font-medium'>Reservasi Kegiatan</h1>
+      <div className='lg:bg-white lg:w-screen lg:items-center lg:justify-start lg:flex lg:p-4 lg:h-[63px] lg:sticky lg:top-0 lg:z-10'>
+        <h1 className='font-outfit lg:text-2xl lg:font-medium hidden lg:block'>Reservasi Kegiatan</h1>
       </div>
 
-      <div className='mx-auto mt-5 w-auto px-2 lg:px-5 lg:min-w-[1020px] lg:max-w-[1920px] lg:mx-auto '>
+      <div className='container w-full mt-3 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 mx-auto flex flex-col lg:max-w-[1920px]'>
         {/* Button fungsi */}
-        <div className='lg:mt-10  flex flex-col lg:flex lg:flex-row gap-3'>
+        <div className='lg:mt-4  flex flex-col lg:flex lg:flex-row gap-3'>
           <Search onSearch={handleSearch} />
 
-          <div className='flex gap-2'>
-            <Button name="Tambah" className={' w-24 h-9 text-center text-[11px]  lg:text-[24px] lg:w-36 lg:h-[56px]'} onClick={() => Navigate('/tambahData')} />
-           
-            {/* Membuat Button Download */}
-            <div className='flex flex-col relative'>
-              <Button img={IconDownload}
-                className={'w-14 h-9 lg:h-[56px] items-center justify-center flex'}
-                classNameIcon={' w-[30px] lg:w-[40px] '}
-                onClick={() => setDownloadOption(!DownloadOption)}
-              />{DownloadOption && (
-                <div className='absolute top-full mt-2 -ml-12 lg:-left-32 w-48 lg:w-80 bg-white rounded-lg border border-1 border-black flex flex-col gap-1 lg:flex lg:flex-row lg:gap-5 p-4 shadow-2xl z-50'>
-                  <select
-                    onChange={(e) => setSelectedMonth(e.target.value)}
-                    value={selectedMonth}
-                    className="border border-warnaDasar h-10 bg-white text-warnaDasar p-2 rounded-lg w-40 lg:w-32 font-outfit font-medium
-                 focus:ring-warnaDasar focus:border-warnaDasar transition ease-in-out"
-                  >
-                    <option
-                      className="font-poppins border border-spacing-1 bg-warnaDasar text-white p-2"
-                      value=""
-                    >
-                      Pilih Bulan
-                    </option>
-                    {monthOption.map((mount) => (
-                      <option
-                        key={mount.value}
-                        value={mount.value}
-                        className="font-poppins bg-white text-gray-700 hover:bg-warnaDasar hover:text-white transition-all"
-                      >
-                        {mount.label}
-                      </option>
-                    ))}
-                  </select>
-                  <div className='flex flex-col gap-2'>
-                    <button className='bg-warnaDasar p-2 text-white font-outfit rounded-lg text-sm h-10 
-                    transform transition-transform duration-300 hover:scale-105' onClick={handleDownloadCSV}>Download CSV</button>
+          <div className=' flex flex-col lg:flex lg:flex-row gap-3'>
+            <div className='flex gap-2'>
+              <Button name="Tambah" className={' w-24 h-9 text-center text-[14px]  lg:text-[24px] lg:w-36 lg:h-[56px]'} onClick={() => Navigate('/tambahData')} />              {/* Membuat Button Download */}
+              <div className='flex flex-col relative'>
+                <Button img={IconDownload}
+                  className={'w-14 h-9 lg:h-[56px] items-center justify-center flex'}
+                  classNameIcon={' w-[30px] lg:w-[40px] '}
+                  onClick={() => setDownloadOption(!DownloadOption)}
+                />
+                {DownloadOption && (
+                  <div className='absolute top-full mt-2 -ml-12 lg:-left-32 w-48 lg:w-80 bg-white rounded-lg border border-1 border-black flex flex-col gap-2 lg:flex lg:flex-row lg:gap-2 p-4 shadow-2xl z-50'>
+                    {/* Year Dropdown */}
 
-                    <button className='bg-warnaDasar p-2 text-white font-outfit rounded-lg text-sm h-10
-                    transform transition-transform duration-300 hover:scale-105' onClick={handleDownloadPDF}>Download PDF</button>
+                    <div className='flex flex-col gap-2'>
+                    <select
+                      onChange={(e) => setSelectedYear(e.target.value)}
+                      value={selectedYear}
+                      className="border border-warnaDasar h-10 bg-white text-warnaDasar p-2 rounded-lg w-40 lg:w-32 font-outfit font-medium
+                            focus:ring-warnaDasar focus:border-warnaDasar transition ease-in-out"
+                    >
+                      <option value="">Pilih Tahun</option>
+                      {yearOption.map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* Month Dropdown */}
+                    <select
+                      onChange={(e) => setSelectedMonth(e.target.value)}
+                      value={selectedMonth}
+                      className="border border-warnaDasar h-10 bg-white text-warnaDasar p-2 rounded-lg w-40 lg:w-32 font-outfit font-medium
+                            focus:ring-warnaDasar focus:border-warnaDasar transition ease-in-out"
+                    >
+                      <option value="">Pilih Bulan</option>
+                      {monthOption.map((mount) => (
+                        <option key={mount.value} value={mount.value}>
+                          {mount.label}
+                        </option>
+                      ))}
+                    </select>
+                    </div>
+
+                    {/* Download Buttons */}
+                    <div className='flex flex-col gap-2'>
+                      <button className='bg-warnaDasar p-2 text-white font-outfit rounded-lg text-sm h-10 
+                    transform transition-transform duration-300 hover:scale-105' onClick={handleDownloadCSV}>
+                        Download CSV
+                      </button>
+
+                      <button className='bg-warnaDasar p-2 text-white font-outfit rounded-lg text-sm h-10
+                    transform transition-transform duration-300 hover:scale-105' onClick={handleDownloadPDF}>
+                        Download PDF
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>          
+                )}
+              </div>
+            </div>
           </div>
         </div>
         {/* akhir button fungsi */}
@@ -262,65 +278,50 @@ const Reservasi = () => {
 
 
         {/* Membuat Loading */}
-        <div className='rounded-xl relative lg:min-w-[460px] lg:max-w-[1080px] pr-2 flex mt-2'>
-          <div>
-            {loading ? (
-              <div className='flex justify-center mt-10'>
-                <div className='spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full'></div>
-              </div>
-            ) : (
-              // Membuat Tabel reservasi
-                <div className='container w-auto min-w-[460px] relative rounded-xl flex items-start justify-start lg:items-center lg:justify-center gap-1 mt-5'>
-                  <div className='bg-white rounded-xl shadow-lg lg:max-w-7xl'>
-                    {/* Membungkus tabel dengan div untuk scroll horizontal */}
-                    <div className="relative flex items-start justify-start w-full"> {/* Tambahkan w-full agar mengambil seluruh lebar layar */}
-                      <div className="relative overflow-x-auto overflow-y-auto min-w-[300px] max-w-[260px] max-h-[500px] lg:max-w-[1080px] lg:max-h-[400px]"> {/* Pastikan max-w-full untuk layar kecil */}
-                        <table className='lg:w-full table-auto leading-normal'>
-                          <thead className='bg-white text-black uppercase text-sm font-poppins leading-normal sticky top-0 z-10'>
-                            <tr>
-                              <th className="px-6 lg:px-6 lg:py-4 text-left font-outfit font-medium lg:font-bold">Tanggal Mulai</th>
-                              <th className="px-4 lg:px-6 lg:py-4 text-left font-outfit font-medium lg:font-bold">Nama</th>
-                              <th className="px-4 lg:px-6 lg:py-4 text-left font-outfit font-medium lg:font-bold">Tempat</th>
-                              <th className="px-4 lg:px-6 lg:py-4 text-left font-outfit font-medium lg:font-bold">Sales</th>
-                              <th className="px-4 lg:px-6 lg:py-4 text-left font-outfit font-medium lg:font-bold">Omzet</th>
-                              <th className="px-4 lg:px-6 lg:py-4 text-left font-outfit font-medium lg:font-bold">Status</th>
-                              <th className="px-6 lg:px-6 lg:py-4 text-left font-outfit font-medium lg:font-bold"></th>
-                            </tr>
-                          </thead>
-
-                          <tbody>
-                            {filterData.map((reservasi, index) => (
-                              <tr key={reservasi.id} className={`border-b border-gray-200 hover:bg-gray-100 ${index % 2 === 0 ? 'bg-green-100' : 'bg-white'}`}>
-                                <td className="px-3 lg:px-6 lg:py-4 text-left font-outfit font-normal lg:font-medium">{reservasi.startDate}</td>
-                                <td className="px-4 lg:px-6 lg:py-4 text-left font-outfit font-normal lg:font-medium">{reservasi.namaCustomer}</td>
-                                <td className="px-4 lg:px-6 lg:py-4 text-left font-outfit font-normal lg:font-medium">  {reservasi.wisata?.namaWisata && reservasi.wisata?.tempatWisata ?`${reservasi.wisata.namaWisata} - ${reservasi.wisata.tempatWisata.join(", ")}` : ""}</td>
-                                <td className="px-4 lg:px-6 lg:py-4 text-left font-outfit font-normal lg:font-medium">{reservasi.sales}</td>
-                                <td className="px-4 lg:px-6 lg:py-4 text-left font-outfit font-normal lg:font-medium">{reservasi.omzet}</td>
-                                <td className="px-4 lg:px-6 lg:py-4 text-left font-outfit font-normal lg:font-medium">{reservasi.selectedStatus}</td>
-                                <td className="flex flex-col lg:flex-row gap-3 items-center justify-center mt-3">
-                                  <button className="" onClick={() => Navigate(`/detailData/${reservasi.id}`)}>
-                                    <img className='w-[20px]' src={Edit} alt="Edit" />
-                                  </button>
-
-                                  <button className=""><img className='w-[25px]' src={Hapus} alt="" /></button>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  <div>
-                  </div>
-                </div>
-               </div>               
-
-            )}
-          </div>
+        <div className='relative my-5 overflow-x-auto overflow-y-auto max-h-[450px] lg:max-h-[450px]'>
+          <table className='w-full text-sm lg:text-base table-auto'>
+            <thead className='bg-blue-700 text-black sticky top-0 z-10'>
+              <tr>
+                <th className='px-5 py-2 font-outfit font-medium lg:font-semibold text-left'>Tanggal Mulai</th>
+                <th className='px-2 py-2 text-left'>Nama</th>
+                <th className='px-2 py-2 text-left'>Tempat</th>
+                <th className='px-2 py-2 text-left'>Sales</th>
+                <th className='px-2 py-2 text-left'>Omzet</th>
+                <th className='px-2 py-2 text-left'>Status</th>
+                <th className='px-2 py-2 text-center'>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filterData.map((reservasi, index) => (
+                <tr key={reservasi.id} className={index % 2 === 0 ? 'bg-green-100' : 'bg-white'}>
+                  <td className='px-5 py-2'>{reservasi.startDate}</td>
+                  <td className='px-2 py-2'>{reservasi.namaCustomer}</td>
+                  <td className="px-2 py-2 sm:px-4">
+                    {reservasi.wisata?.namaWisata && reservasi.wisata?.tempatWisata
+                      ? `${reservasi.wisata.namaWisata} - ${reservasi.wisata.tempatWisata.join(', ')}`
+                      : ""}
+                  </td>
+                  <td className='px-2 py-2'>{reservasi.sales}</td>
+                  <td className='px-2 py-2'>{reservasi.omzet}</td>
+                  <td className='px-2 py-2'>{reservasi.selectedStatus}</td>
+                  <td className='flex flex-col lg:flex-row gap-4 items-center justify-center'>
+                    <button onClick={() => Navigate(`/detailData/${reservasi.id}`)}>
+                      <img className='w-[16px] sm:w-[20px]' src={Edit} alt="Edit" />
+                    </button>
+                    <button>
+                      <img className='w-[24px] sm:w-[25px]' src={Hapus} alt="Hapus" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
 
+
+
         {/* Akhir Membuat Tabel  */}
-        
+
       </div>
 
 

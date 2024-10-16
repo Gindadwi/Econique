@@ -65,14 +65,14 @@ export default function OptionWisata({ selectedWisata, setSelectedWisata }) {
     };
 
     return (
-        <div className="flex flex-col space-y-2">
+        <div className="grid grid-cols-1 space-y-2">
             {/* Dropdown for selecting Wisata */}
             <Select
                 options={wisataOptions}
                 value={selectedWisata?.wisata || null} // Set the current Wisata selection
                 onChange={handleWisataChange}
                 placeholder="Pilih Tempat Wisata"
-                className="w-[270px] lg:w-80 h-14 rounded-xl border-black"
+                className="w-full lg:w-80 h-14 rounded-md border-black"
                 styles={{
                     control: (base) => ({
                         ...base,
@@ -95,7 +95,7 @@ export default function OptionWisata({ selectedWisata, setSelectedWisata }) {
                     onChange={handleTempatChange}
                     isMulti // Allow multiple selections for Tempat
                     placeholder="Pilih Tempat"
-                    className="w-[270px] lg:w-80 h-auto rounded-xl border-black"
+                    className="w-full lg:w-80 h-auto rounded-md border-black"
                     styles={{
                         control: (base) => ({
                             ...base,

@@ -162,7 +162,7 @@ const EditData = () => {
 
   return ( 
     <div>
-      <div className='bg-white lg:w-screen w-full items-center sticky top-0 z-10 justify-start flex p-4 h-[63px]'>
+      <div className='bg-white lg:w-screen w-full items-center lg:sticky lg:top-0 lg:z-10 justify-start flex p-4 h-[63px]'>
         <h1 className='font-outfit text-lg lg:text-2xl font-medium'>Detail Data</h1>
       </div>
       <form onSubmit={handleSubmit} className="space-y-4 bg-gray-100 p-4 rounded-lg shadow-md">

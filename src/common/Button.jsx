@@ -4,7 +4,7 @@ function Button (props) {
 
     return(
         <button
-        className={`bg-warnaDasar h-14 text-white text-xl font-poppins font-medium rounded-md ${className}`}
+        className={`bg-warnaDasar h-14 text-white  font-poppins font-medium rounded-md ${className}`}
         id={id}
         type={type}
         onClick={onClick}

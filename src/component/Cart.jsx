@@ -1,33 +1,28 @@
-// Import React hooks dan komponen yang dibutuhkan
 import React, { useEffect, useState } from "react";
-import { Bar } from "react-chartjs-2"; // Komponen ChartJS khusus untuk grafik batang
-import axios from "axios"; // Library untuk request API
+import { Bar } from "react-chartjs-2";
+import axios from "axios";
 import {
-    Chart as ChartJS, // Registrasi modul ChartJS agar grafik dapat digunakan
-    CategoryScale, // Skala kategori untuk sumbu X
-    LinearScale, // Skala linear untuk sumbu Y
-    BarElement, // Elemen batang dalam grafik
-    Title, Tooltip, Legend, // Plugin untuk judul, tooltip, dan legend
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
 } from "chart.js";
 
-// Registrasi modul-modul ChartJS yang akan digunakan
+// Registrasi modul yang dibutuhkan oleh ChartJS
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-// Komponen utama grafik batang
 const BarChartMobile = () => {
-    // State untuk menyimpan data grafik (label dan dataset)
     const [chartData, setChartData] = useState({
-        labels: [], // Label bulan
-        datasets: [], // Data pesanan per bulan
+        labels: [],
+        datasets: [],
     });
 
-    // State untuk menyimpan tahun yang dipilih sebagai filter
-    const [yearFilter, setYearFilter] = useState(new Date().getFullYear()); // Default: tahun sekarang
-
-    // State untuk menyimpan daftar tahun yang tersedia dalam data
+    const [yearFilter, setYearFilter] = useState(new Date().getFullYear());
     const [availableYears, setAvailableYears] = useState([]);
 
-    // useEffect untuk memuat data saat komponen pertama kali dirender atau ketika tahunFilter berubah
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -36,21 +31,16 @@ const BarChartMobile = () => {
                 );
                 const data = response.data;
 
-                // Inisialisasi array untuk menyimpan jumlah pesanan per bulan untuk masing-masing status
-                const monthlyFiks = new Array(12).fill(0); // Untuk "Fiks"
-                const monthlyReschedule = new Array(12).fill(0); // Untuk "Reschedule"
+                const monthlyFiks = new Array(12).fill(0);
+                const monthlyReschedule = new Array(12).fill(0);
+                const yearsSet = new Set();
 
-                const yearsSet = new Set(); // Set untuk menyimpan tahun unik
-
-                // Iterasi setiap item data
                 Object.values(data).forEach((item) => {
-                    const startDate = new Date(item.startDate); // Konversi tanggal mulai
-                    const month = startDate.getMonth(); // Dapatkan bulan (0-11)
-                    const year = startDate.getFullYear(); // Dapatkan tahun
+                    const startDate = new Date(item.startDate);
+                    const month = startDate.getMonth();
+                    const year = startDate.getFullYear();
+                    yearsSet.add(year);
 
-                    yearsSet.add(year); // Tambahkan tahun ke dalam Set
-
-                    // Pisahkan jumlah pesanan berdasarkan status
                     if (year === parseInt(yearFilter)) {
                         if (item.selectedStatus === "Fiks") {
                             monthlyFiks[month]++;
@@ -60,63 +50,66 @@ const BarChartMobile = () => {
                     }
                 });
 
-                // Set data untuk grafik dengan dua dataset berbeda
                 setChartData({
                     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
                     datasets: [
                         {
                             label: `Pesanan Fiks (${yearFilter})`,
                             data: monthlyFiks,
-                            backgroundColor: "rgba(1, 102, 0, 0.8)", // Warna biru transparan
-                            borderColor: "rgba(3, 255, 0, 0.8)", // Warna biru lebih gelap
+                            backgroundColor: "rgba(1, 102, 0, 0.8)",
+                            borderColor: "rgba(3, 255, 0, 0.8)",
                             borderWidth: 1,
                         },
                         {
                             label: `Pesanan Reschedule (${yearFilter})`,
                             data: monthlyReschedule,
-                            backgroundColor: "rgba(255, 82, 0, 0.8)", // Warna oranye transparan
-                            borderColor: "rgba(234, 88, 12, 1)", // Warna oranye lebih gelap
+                            backgroundColor: "rgba(255, 82, 0, 0.8)",
+                            borderColor: "rgba(234, 88, 12, 1)",
                             borderWidth: 1,
                         },
                     ],
                 });
 
-                // Set daftar tahun yang tersedia
                 setAvailableYears([...yearsSet].sort((a, b) => a - b));
             } catch (error) {
-                console.error("Error fetching data:", error); // Tangani error jika ada
+                console.error("Error fetching data:", error);
             }
         };
 
-        fetchData(); // Panggil fungsi untuk memuat data
-    }, [yearFilter]); // Dipicu setiap kali filter tahun berubah
+        fetchData();
+    }, [yearFilter]);
 
     return (
-        <div className="p-4 relative overflow-x-auto bg-white rounded-lg shadow-md max-w-[1080px] lg:w-[500px] mx-0">
-            <h2 className="text-lg font-semibold mb-4">Grafik Pesanan</h2>
+        <div className="w-full flex flex-col items-start px-2 lg:px-4 lg:pb-4">
+            <div className="bg-white p-4 rounded-lg shadow-md w-full max-w-lg lg:max-w-lg">
+                <h2 className="text-lg font-semibold mb-4 text-center">Grafik Pesanan</h2>
 
-            {/* Filter Tahun */}
-            <div className="mb-4 flex flex-row items-center justify-center">
-                <label htmlFor="yearFilter" className="block text-sm w-36 font-medium text-gray-700">
-                    Pilih Tahun:
-                </label>
-                <select
-                    id="yearFilter"
-                    value={yearFilter}
-                    onChange={(e) => setYearFilter(e.target.value)}
-                    className="mt-1 block w-full p-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500"
+                <div className="mb-4 flex items-center space-x-4 ">
+                    <label htmlFor="yearFilter" className="block text-sm font-medium text-gray-700">
+                        Pilih Tahun:
+                    </label>
+                    <select
+                        id="yearFilter"
+                        value={yearFilter}
+                        onChange={(e) => setYearFilter(e.target.value)}
+                        className="lg:w-80 w-full p-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500"
+                    >
+                        {availableYears.map((year) => (
+                            <option key={year} value={year}>
+                                {year}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                {/* Kontainer grafik responsif */}
+                <div
+                    className="w-full"
+                    style={{
+                        height: '300px', // Tinggi grafik default (mobile)
+                        maxWidth: '500px', // Maksimum lebar grafik (mobile)
+                    }}
                 >
-                    {availableYears.map((year) => (
-                        <option key={year} value={year}>
-                            {year}
-                        </option>
-                    ))}
-                </select>
-            </div>
-
-            {/* Grafik Batang */}
-            <div className="min-w-[500px] overflow-x-auto lg:min-w-0 lg:overflow-x-hidden">
-                <div className="flex flex-col justify-start items-start">
                     <Bar
                         data={chartData}
                         options={{
@@ -133,14 +126,13 @@ const BarChartMobile = () => {
                                 y: { beginAtZero: true },
                             },
                         }}
-                        height={300} // Tinggi grafik untuk tampilan mobile
                     />
                 </div>
+           
             </div>
+
         </div>
     );
-
 };
 
-// Ekspor komponen agar bisa digunakan di file lain
 export default BarChartMobile;

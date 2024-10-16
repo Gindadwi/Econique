@@ -99,7 +99,7 @@ const TambahData = () => {
     e.preventDefault();
 
     // Validasi sederhana
-    if (!startDate || !finishDate || !startDP || !namaCustomer || !nomorHp || !alamat || !jumlahPeserta || !sales || !selectedStatus || !nameKegiatan || !instansiKeluarga) {
+    if (!startDate || !finishDate || !namaCustomer || !nomorHp || !alamat || !jumlahPeserta || !sales || !selectedStatus || !nameKegiatan || !instansiKeluarga) {
       toast.error("Semua field yang diperlukan harus diisi!");
       return;
     }
@@ -198,185 +198,208 @@ const TambahData = () => {
 
 
   return (
-    <div className='min-w-[460px] '>
-      <div className='bg-white lg:w-screen w-full items-center sticky top-0 z-10 justify-start flex p-4 h-[63px]'>
-        <h1 className='font-outfit text-lg lg:text-2xl font-medium'>Tambah Data</h1>
-      </div>
-      <h1 className="font-outfit font-semibold ml-2 lg:ml-0 mt-5 mb-5 text-lg lg:text-center lg:text-2xl w-full">Lengkapi Form Dibawah</h1>
-      <div className=' p-1 lg:p-5  lg:items-center lg:justify-center flex'>
-        <form action="" onSubmit={handleSumbitForm} className="flex flex-col gap-5">
+    <>
+      <div className="relative w-full max-w-[1180px] h-screen overflow-y-auto overflow-x-hidden">
+        {/* Header */}
+        <div className='bg-white w-screen lg:w-screen items-center justify-start flex p-4 h-[63px] lg:sticky lg:top-0 lg:z-10 hidden lg:block'>
+          <h1 className='font-outfit text-[18px] lg:text-2xl font-medium hidden lg:block'>Dashboard</h1>
+        </div>
 
-          {/* Baris Pertama Form Tambah Data */}
-          <div className='flex flex-col lg:flex-row gap-5'>
-            {/* Tanggal Mulai */}
-            <div>
-              <DatePicker
-                selected={startDate}
-                onChange={(date) => setStartDate(date)}
-                dateFormat="dd/MM/yyyy"
-                placeholderText="Tanggal Mulai"
-                className=' w-[270px] lg:w-80 h-14 rounded-xl px-3 font-outfit border border-1 border-black'
-              />
-            </div>
-            <div >
+
+        <div className="w-full mb-[130px] px-4 lg:px-8 mt-5">
+          <form onSubmit={handleSumbitForm} className=" flex flex-col gap-6 items-center justify-center">
+            {/* Baris Pertama Form Tambah Data */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
+              {/* Tanggal Mulai */}
+              <div className='flex flex-col'>
+                <label className="font-outfit font-medium">Tanggal Mulai</label>
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  dateFormat="dd/MM/yyyy"
+                  placeholderText="Masukan Tanggal Mulai"
+                  className="w-full h-14 rounded-md px-3 font-outfit border border-1 border-black"
+                />
+              </div>
+
               {/* Tanggal Selesai */}
-              <DatePicker
-                selected={finishDate}
-                onChange={(date) => setFinishDate(date)}
-                dateFormat="dd/MM/yyyy"
-                placeholderText="Tanggal Selesai"
-                className='w-[270px] lg:w-80 h-14 rounded-xl px-3 font-outfit border border-1 border-black'
-              />
-            </div>
-            <div className='flex flex-col'>
+              <div className='flex flex-col'>
+                <label className="font-outfit font-medium">Tanggal Selesai</label>
+                <DatePicker
+                  selected={finishDate}
+                  onChange={(date) => setFinishDate(date)}
+                  dateFormat="dd/MM/yyyy"
+                  placeholderText="Masukan Tanggal Selesai"
+                  className="w-full h-14 rounded-md px-3 font-outfit border border-1 border-black"
+                />
+              </div>
+
               {/* Waktu Mulai */}
-              <input type="text"
-                value={waktu}
-                onChange={(e) => setWaktu(e.target.value)}
-                className='w-[270px] lg:w-80  h-14 rounded-xl px-3 font-outfit border border-1 border-black'
-                placeholder='Waktu' />
+              <div className='flex flex-col'>
+                <label className="font-outfit font-medium">Jam Mulai</label>
+                <input type="text"
+                  value={waktu}
+                  onChange={(e) => setWaktu(e.target.value)}
+                  className="w-full h-14 rounded-md px-3 font-outfit border border-1 border-black"
+                  placeholder='Waktu' />
+              </div>
             </div>
-          </div>
 
+            {/* Baris Kedua Form Tambah Data */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
+              {/* Nama Customer */}
+              <div className='flex flex-col'>
+                <label className="font-outfit font-medium">Nama Customer</label>
+                <input type="text"
+                  value={namaCustomer}
+                  onChange={(e) => setNamaCustomer(e.target.value)}
+                  className="w-full h-14 rounded-md px-3 font-outfit border border-1 border-black"
+                  placeholder="Masukan Nama Customer" />
+              </div>
 
-          {/* Baris Kedua Form Tambah Data */}
-          <div className='flex flex-col lg:flex-row gap-5'>
-            {/* Nama Customer */}
-            <div className='flex flex-col'>
-              <input type="text"
-                value={namaCustomer}
-                onChange={(e) => setNamaCustomer(e.target.value)} 
-                className='w-[270px] lg:w-80  h-14 rounded-xl px-3 font-outfit border border-1 border-black'
-                placeholder='Nama Customer' />
-            </div>
-            <div className='flex flex-col'>
-              {/* Nomor Hp */}
-              <input type="tel" 
-                value={nomorHp}
-                onChange={(e) => setNomorHp(e.target.value)} 
-                className='w-[270px] lg:w-80  h-14 rounded-xl px-3 font-outfit border border-1 border-black'
-                placeholder='Nomor Hp' />
-            </div>
-            <div className='flex flex-col'>
+              {/* Nomor HP */}
+              <div className='flex flex-col'>
+                <label className="font-outfit font-medium">Nomor Telp</label>
+                <input type="tel"
+                  value={nomorHp}
+                  onChange={(e) => setNomorHp(e.target.value)}
+                  className="w-full h-14 rounded-md px-3 font-outfit border border-1 border-black"
+                  placeholder="Masukan Nomor Hp/Wa" />
+              </div>
+
               {/* Alamat */}
-              <input type="text"
-                value={alamat}
-                onChange={(e) => setAlamat(e.target.value)}  
-                className='w-[270px] lg:w-80  h-14 rounded-xl px-3 font-outfit border border-1 border-black'
-                placeholder='Alamat' />
-            </div>
-          </div>
-
-
-          {/* Baris Ketiga Form Tambah Data */}
-          <div className='flex flex-col lg:flex-row gap-5'>
-            <div className='flex flex-col'>
-              {/* Option Pilih Keterangan keluarga atau instansi */}
-              <Option
-              name={"Jenis Kelompok"}
-              value={selectedOption}
-              onChange={handleSelectChange}
-              options={option}
-              />
+              <div className='flex flex-col'>
+                <label className="font-outfit font-medium">Alamat</label>
+                <input type="text"
+                  value={alamat}
+                  onChange={(e) => setAlamat(e.target.value)}
+                  className="w-full h-14 rounded-md px-3 font-outfit border border-1 border-black"
+                  placeholder="Masukan Alamat Customer" />
+              </div>
             </div>
 
-            <div className='flex flex-col'>
+            {/* Baris Ketiga Form Tambah Data */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
+              {/* Pilihan Kategori */}
+              <div className='flex flex-col'>
+                <label className="font-outfit font-medium">Kelompok</label>
+                <Option
+                  name={"Pilih Jenis Kelompok"}
+                  value={selectedOption}
+                  onChange={handleSelectChange}
+                  options={option}
+                />
+              </div>
+
               {/* Nama Instansi atau Keluarga */}
-              <input type="text"
-                value={instansiKeluarga}
-                onChange={(e) => setInstansiKeluarga(e.target.value)}  
-                className='w-[270px] lg:w-80  h-14 rounded-xl px-3 font-outfit border border-1 border-black'
-                placeholder='Nama Instansi/Keluarga' />
-            </div>
-            <div className='flex flex-col'>
+              <div className='flex flex-col'>
+                <label className="font-outfit font-medium">Nama Instansi/Keluarga</label>
+                <input type="text"
+                  value={instansiKeluarga}
+                  onChange={(e) => setInstansiKeluarga(e.target.value)}
+                  className="w-full h-14 rounded-md px-3 font-outfit border border-1 border-black"
+                  placeholder="Nama Instansi/Keluarga" />
+              </div>
+
               {/* Nama Kegiatan */}
-              <input type="text" 
-                value={nameKegiatan}
-                onChange={(e) => setNameKegiatan(e.target.value)}  
-              className='w-[270px] lg:w-80  h-14 rounded-xl px-3 font-outfit border border-1 border-black'
-                placeholder='Nama Kegiatan' />
+              <div className='flex flex-col'>
+                <label className="font-outfit font-medium">Kegiatan</label>
+                <input type="text"
+                  value={nameKegiatan}
+                  onChange={(e) => setNameKegiatan(e.target.value)}
+                  className="w-full h-14 rounded-md px-3 font-outfit border border-1 border-black"
+                  placeholder="Masukan Nama Kegiatan" />
+              </div>
             </div>
 
-          </div>
-
-
-          {/* Baris KeEmpat Form Tambah Data */}
-          <div className='flex flex-col lg:flex-row gap-5'>
-            <div className='flex flex-col'>
-              {/* Option Pilih tempat wisata */}
-              <OptionsWisata
-              selectedWisata={wisata} 
-              setSelectedWisata={setWisata} 
-              value={wisata}
-              onChange={(e) => setWisata(e.target.value)}
-              />
+            {/* Baris KeEmpat Form Tambah Data */}
+            <div className='grid grid-cols-1 lg:grid-cols-3 gap-6 w-full'>
+              <div className='flex flex-col'>
+                {/* Option Pilih tempat wisata */}
+                <label className="font-outfit font-medium">Tempat Wisata</label>
+                <OptionsWisata
+                  selectedWisata={wisata}
+                  setSelectedWisata={setWisata}
+                  value={wisata}
+                  onChange={(e) => setWisata(e.target.value)}
+                />
+              </div>
+              {/* Jumlah Peserta */}
+              <div className='flex flex-col'>
+                <label className="font-outfit font-medium">Jumlah Peserta</label>
+                <input type="text"
+                  value={jumlahPeserta}
+                  onChange={(e) => setJumlahPeserta(e.target.value)}
+                  className='w-full lg:w-80  h-14 rounded-md px-3 font-outfit border border-1 border-black'
+                  placeholder='Masukan Jumlah Peserta' />
+              </div>
+              <div className='flex flex-col'>
+                {/* Nama Sales */}
+                <label className="font-outfit font-medium">Sales</label>
+                <input type="text"
+                  value={sales}
+                  onChange={(e) => setSales(e.target.value)}
+                  className="w-full h-14 rounded-md px-3 font-outfit border border-1 border-black"
+                  placeholder='Masukan Nama Sales' />
+              </div>
             </div>
-            {/* Jumlah Peserta */}
-            <div className='flex flex-col'>
-              <input type="text"
-                value={jumlahPeserta}
-                onChange={(e) => setJumlahPeserta(e.target.value)}  
-                className='w-[270px] lg:w-80  h-14 rounded-xl px-3 font-outfit border border-1 border-black'
-                placeholder='Jumlah Peserta' />
-            </div>
-            <div className='flex flex-col'>
-              {/* Nama Sales */}
-              <input type="text" 
-                value={sales}
-                onChange={(e) => setSales(e.target.value)}  
-              className='w-[270px] lg:w-80  h-14 rounded-xl px-3 font-outfit border border-1 border-black'
-                placeholder='Sales' />
-            </div>
-            
-          </div>
 
-
-          {/* Baris Ke Lima Form Tambah Data */}
-          <div className='flex flex-col lg:flex-row gap-5'>
-            <div className='flex flex-col'>
-              {/* Status Fix atau reschedule */}
-              <Option
-                name={"Pilih Status"}
-                value={selectedStatus}
-                onChange={handleStatus}
-                options={status}
-              />
+            {/* Baris Ke Lima Form Tambah Data */}
+            <div className='grid grid-cols-1 lg:grid-cols-3 gap-6 w-full'>
+              <div className='flex flex-col'>
+                {/* Status Fix atau reschedule */}
+                <label className="font-outfit font-medium">Status</label>
+                <Option
+                  name={"Pilih Status Pesanan"}
+                  value={selectedStatus}
+                  onChange={handleStatus}
+                  options={status}
+                />
+              </div>
+              <div className='flex flex-col'>
+                {/* Jumlah DP */}
+                <label className="font-outfit font-medium">Total DP</label>
+                <input type="text"
+                  value={jumlahDp}
+                  onChange={(e) => handleNumberChange(e, setJumlahDp)}
+                  className="w-full h-14 rounded-md px-3 font-outfit border border-1 border-black"
+                  placeholder='Masukan Jumlah DP' />
+              </div>
+              {/* Tanggal DP */}
+              <div className="flex flex-col">
+                <label className="font-outfit font-medium">Tanggal Dp</label>
+                <DatePicker
+                  selected={startDP}
+                  onChange={(date) => setStartDP(date)}
+                  dateFormat="dd/MM/yyyy"
+                  placeholderText="Masukan Tanggal DP"
+                  className="w-full h-14 rounded-md px-3 font-outfit border border-1 border-black"
+                />
+              </div>
             </div>
-            <div className='flex flex-col'>
-              {/* Jumlah DP */}
-              <input type="text"
-                value={jumlahDp}
-                onChange={(e) => handleNumberChange(e, setJumlahDp)}
-                className='w-[270px] lg:w-80 h-14 rounded-xl px-3 font-outfit border border-1 border-black'
-                placeholder='Jumlah DP' />
-            </div>
-            {/* Tanggal DP */}
-            <DatePicker
-              selected={startDP}
-              onChange={(date) => setStartDP(date)}
-              dateFormat="dd/MM/yyyy"
-              placeholderText="Tanggal DP"
-              className='w-[270px] lg:w-80  h-14 rounded-xl px-3 font-outfit border border-1 border-black'
-            />
 
-            
-          </div>
-
-          {/* Baris Ke Enam Form Tambah Data */}
-          <div className='flex flex-col lg:flex-row gap-5'>
-            <div className='flex flex-col'>
-              {/* Omzet Keegiatan */}
-              <input type="text"
-                value={omzet}
-                onChange={(e) => handleNumberChange(e, setOmzet)}
-                className='w-[270px] lg:w-80 h-14 rounded-xl px-3 font-outfit border border-1 border-black'
-                placeholder='Omzet' />
+            {/* Baris Ke Enam Form Tambah Data */}
+            <div className='grid grid-cols-1 lg:flex w-full lg:flex-row gap-5'>
+              <div className='flex flex-col'>
+                {/* Omzet Keegiatan */}
+                <label className="font-outfit font-medium">Omzet</label>
+                <input type="text"
+                  value={omzet}
+                  onChange={(e) => handleNumberChange(e, setOmzet)}
+                  className="w-full h-14 rounded-md px-3 font-outfit border border-1 border-black"
+                  placeholder='Masukan Total Omzet Kegiatan' />
+              </div>
             </div>
-          </div>
-            <Button type="submit" name={'Simpan'} className={`w-32 h-10 lg:w-48`} />
-        </form>
-      </div>
-    </div>
+
+            <div className="grid grid-cols-1 lg:flex lg:flex-col justify-end items-end w-full">
+              <Button type="submit" name={'Simpan'} className={`w-32 h-10 lg:w-48`} />
+            </div>
+
+          </form>
+        </div>
+
+        </div>
+    </>
   );
 }
 
