@@ -6,7 +6,9 @@ import Select from "react-select";
 export default function OptionWisata({ selectedWisata, setSelectedWisata }) {
     const [wisataOptions, setWisataOptions] = useState([]);
     const [tempat, setTempat] = useState([]);
-    const [selectedTempat, setSelectedTempat] = useState(null);
+    const [selectedTempat, setSelectedTempat] = useState({
+        tempat: []
+    });
 
     // Fetch Wisata options on component mount
     useEffect(() => {

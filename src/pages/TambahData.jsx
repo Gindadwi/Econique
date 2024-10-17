@@ -379,7 +379,7 @@ const TambahData = () => {
             </div>
 
             {/* Baris Ke Enam Form Tambah Data */}
-            <div className='grid grid-cols-1 lg:flex w-full lg:flex-row gap-5'>
+            <div className='grid grid-cols-1 lg:grid w-full lg:grid-cols-3 gap-5 '>
               <div className='flex flex-col'>
                 {/* Omzet Keegiatan */}
                 <label className="font-outfit font-medium">Omzet</label>
