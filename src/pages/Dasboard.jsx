@@ -62,16 +62,16 @@ export default function Dashboard() {
 
             <div className="grid grid-cols-2 gap-1 lg:grid-cols-4 justify-center items-center px-4 mt-3">
                 <div className="bg-white p-4 text-center rounded-lg">
-                    <h2 className="font-poppins font-medium text-[14px] lg:text-lg">Surat Masuk</h2>
-                    <p className="text-[14px] lg:text-2xl font-bold">{suratMasuk}</p>                
-                </div>
-                <div className="bg-white p-4 text-center rounded-lg">
                     <h2 className="font-poppins font-medium text-[14px] lg:text-lg">Fiks</h2>
                     <p className="text-[14px] lg:text-2xl font-bold">{fiks}</p>                
                 </div>
                 <div className="bg-white p-4 text-center rounded-lg">
                     <h2 className="font-poppins font-medium text-[14px] lg:text-lg">Reschedule</h2>
                     <p className="text-[14px] lg:text-2xl font-bold">{ reschedule }</p>                
+                </div>
+                <div className="bg-white p-4 text-center rounded-lg">
+                    <h2 className="font-poppins font-medium text-[14px] lg:text-lg">Surat Masuk</h2>
+                    <p className="text-[14px] lg:text-2xl font-bold">{suratMasuk}</p>
                 </div>
                 <div className="bg-white p-4 text-center rounded-lg">
                     <h2 className="font-poppins font-medium text-[14px] lg:text-lg">Total Omzet</h2>

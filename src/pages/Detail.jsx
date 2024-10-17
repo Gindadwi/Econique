@@ -345,7 +345,7 @@ const EditData = () => {
           </div>
 
 
-          <div className='mt-10 w-full flex justify-end items-end'>
+          <div className='mt-1 w-full flex justify-end items-end'>
             <Button type="submit" name={'Update Data'} className={`w-32 h-10 lg:w-48`} />
           </div>
 

@@ -7,6 +7,8 @@ import { toast } from 'react-hot-toast'; // Import toast untuk menampilkan notif
 import jsPDF from 'jspdf'; // Import jsPDF untuk download PDF
 import 'jspdf-autotable'; // Import AutoTable untuk membuat tabel dalam PDF
 import { Navigate, useNavigate, Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
+
 
 import Hapus from '../assets/delete.png'
 import Edit from '../assets/Edit.png'
@@ -197,6 +199,40 @@ const Reservasi = () => {
   // Render halaman reservasi
 
 
+  //Membuat kode hapus data 
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: 'Apakah Anda yakin?',
+      text: 'Data yang dihapus tidak dapat dikembalikan!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya, Hapus!',
+      cancelButtonText: 'Batal',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(
+            `https://econique-perhutani-default-rtdb.firebaseio.com/ReservasiKegiatan/${id}.json?auth=oahZAHcmPhj9gDp0HdkDFaCuGRt2pPZrX05YsdIl`
+          );
+          toast.success('Data berhasil dihapus'); // Notifikasi jika berhasil
+
+          // Update state tanpa data yang dihapus
+          setReservasiData((prevData) => prevData.filter((item) => item.id !== id));
+          setFilterData((prevData) => prevData.filter((item) => item.id !== id));
+
+          Swal.fire('Terhapus!', 'Data berhasil dihapus.', 'success');
+        } catch (error) {
+          console.error('Error deleting data:', error);
+          toast.error('Gagal menghapus data'); // Notifikasi jika gagal
+        }
+      }
+    });
+  };
+
+
 
 
   return (
@@ -308,7 +344,7 @@ const Reservasi = () => {
                     <button onClick={() => Navigate(`/detailData/${reservasi.id}`)}>
                       <img className='w-[16px] sm:w-[20px]' src={Edit} alt="Edit" />
                     </button>
-                    <button>
+                    <button onClick={() => handleDelete(reservasi.id)}>
                       <img className='w-[24px] sm:w-[25px]' src={Hapus} alt="Hapus" />
                     </button>
                   </td>
