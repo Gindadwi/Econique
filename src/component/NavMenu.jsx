@@ -116,7 +116,7 @@ export default function Navbar() {
                         {userRole === "Super Admin" && (
                             <li
                                 onClick={() => navigate(superAdminMenu.path)}
-                                className="cursor-pointer font-poppins text-sm font-medium text-warnaDasar flex items-center 
+                                className="cursor-pointer font-poppins text-sm font-medium text-black
                                     lg:text-lg lg:hover:bg-warnaDasar lg:hover:text-white rounded-md p-2 transition-all duration-300"
                             >
                                 {superAdminMenu.title}
