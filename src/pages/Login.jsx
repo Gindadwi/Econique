@@ -52,14 +52,14 @@ export default function Login() {
 
     return (
         <div className='bg-white h-screen w-screen flex flex-col items-center justify-center'>
-            <div className='flex flex-row gap-3 w-[245px] items-center absolute top-1 start-1'>
+            <div className='flex flex-row gap-3 w-[245px] items-center absolute top-1 start-5'>
                 <img className='w-14 lg:w-[100px]' src={LogoPerhutani} alt="" />
                 <img className='w-14 pt-2 lg:w-[100px]' src={Econique} alt="" />
             </div>
 
             <div className='w-full max-w-[1080px] flex flex-col gap-5 -mt-16 items-center'>
                 <p className='text-2xl font-outfit font-semibold text-black'>Masuk</p>
-                <form onSubmit={handleLogin} className='flex flex-col gap-3 items-center lg:max-w-[400px] w-full'>
+                <form onSubmit={handleLogin} className='flex flex-col px-5 gap-3 items-center lg:max-w-[400px] w-full'>
                     <div className='flex flex-col w-full'>
                         <label className='text-black font-poppins text-[14px]'>Username</label>
                         <input
@@ -82,7 +82,7 @@ export default function Login() {
                         />
                         <button
                             type='button'
-                            className='absolute right-4 top-[42px]'
+                            className='absolute right-4 top-[32px] lg:top-[38px]'
                             onClick={() => setShowPassword(!showPassword)}
                         >
                             <Icon icon={showPassword ? "mdi:eye-off-outline" : "mdi:eye-outline"} width={20} />
