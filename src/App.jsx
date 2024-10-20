@@ -10,6 +10,7 @@ import { Toaster } from 'react-hot-toast';
 import Login from './pages/Login';
 import { useState } from 'react';
 import NavMenu from './component/NavMenu'
+import DasboardAdmin from './Admin/DasboardAdmin'
 
 function App() {
   const location = useLocation();
@@ -46,6 +47,7 @@ function App() {
           <Route path="/tambahData" element={<TambahData />} />
           <Route path="/detailData/:id" element={<Detail />} />
           <Route path="/akses" element={<Akses />} />
+          <Route path="/dashboardAdmin" element={<DasboardAdmin />} />
         </Routes>      
       </div>
       

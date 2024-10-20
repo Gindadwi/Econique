@@ -125,29 +125,32 @@ const Reservasi = () => {
     return dateObj.getFullYear();
   }))];
 
-  const handleDownloadCSV = () => {
-    const filteredData = reservasiData.filter((reservasi) => {
-      const dateObj = new Date(reservasi.startDate);
-      return dateObj.getMonth() + 1 === parseInt(selectedMonth) && dateObj.getFullYear() === parseInt(selectedYear);
-    });
+ const handleDownloadCSV = () => {
+  const filteredData = reservasiData.filter((reservasi) => {
+    const dateObj = new Date(reservasi.startDate);
+    return dateObj.getMonth() + 1 === parseInt(selectedMonth) && dateObj.getFullYear() === parseInt(selectedYear);
+  });
 
-    if (filteredData.length === 0) {
-      toast.error('Tidak ada data untuk bulan dan tahun yang dipilih');
-      return;
-    }
+  if (filteredData.length === 0) {
+    toast.error('Tidak ada data untuk bulan dan tahun yang dipilih');
+    return;
+  }
 
-    const csvHeaders = "Tanggal Mulai; Tanggal Selesai; Nama; Alamat; Nama Kegiatan; Tempat; Jumlah Orang; Sales; Status; Nominal Bayar\n";
-    const csvContent = csvHeaders + filteredData.map(reservasi =>
-      `${reservasi.startDate};${reservasi.finishDate};${reservasi.namaCustomer};${reservasi.alamat};${reservasi.nameKegiatan};${reservasi.wisata?.namaWisata && reservasi.wisata?.tempatWisata ? `${reservasi.wisata.namaWisata} - ${reservasi.wisata.tempatWisata.join(", ")}` : ""};${reservasi.jumlahPeserta};${reservasi.sales};${reservasi.selectedStatus};${reservasi.Omzet}`
-    ).join("\n");
+  // Calculate total omzet
+  const totalOmzet = filteredData.reduce((total, reservasi) => total + (parseFloat(reservasi.omzet) || 0), 0);
 
-    const encodeUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodeUri);
-    link.setAttribute("download", `reservasi_data_${selectedYear}_${selectedMonth}.csv`);
-    document.body.appendChild(link);
-    link.click();
-  };
+  const csvHeaders = "Tanggal Mulai; Tanggal Selesai; Nama; Alamat; Nama Kegiatan; Tempat; Jumlah Orang; Sales; Status; Nominal Bayar; Total Omzet\n";
+  const csvContent = csvHeaders + filteredData.map(reservasi =>
+    `${reservasi.startDate};${reservasi.finishDate};${reservasi.namaCustomer};${reservasi.alamat};${reservasi.nameKegiatan};${reservasi.wisata?.namaWisata && reservasi.wisata?.tempatWisata ? `${reservasi.wisata.namaWisata} - ${reservasi.wisata.tempatWisata.join(", ")}` : ""};${reservasi.jumlahPeserta};${reservasi.sales};${reservasi.selectedStatus};${reservasi.omzet};${totalOmzet}`
+  ).join("\n");
+
+  const encodeUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodeUri);
+  link.setAttribute("download", `reservasi_data_${selectedYear}_${selectedMonth}.csv`);
+  document.body.appendChild(link);
+  link.click();
+};
 
   const handleDownloadPDF = () => {
     const filteredData = reservasiData.filter((reservasi) => {

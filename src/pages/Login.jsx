@@ -3,74 +3,99 @@ import Econique from '../assets/Econique.png';
 import LogoPerhutani from '../assets/LogoPerhutani.png';
 import Button from '../common/Button';
 import { Icon } from '@iconify/react';
-import axios from 'axios';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-export default function Login (){
-    
-    const [showPassword, setShowPassword] = useState();
-    const [username, setUsername] = useState('');
+import { useNavigate } from 'react-router-dom';
+import { auth, db } from "../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { collection, query, where, getDocs } from "firebase/firestore";
+
+export default function Login() {
+    const [showPassword, setShowPassword] = useState(false);
+    const [namaLengkap, setNamaLengkap] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
-    const handleLogin = async(e) => {
-        e.preventDefault(); // Mencegah refresh halaman secara default
+    const handleLogin = async (e) => {
+        e.preventDefault();
         try {
-            const response = await axios.get('https://econique-perhutani-default-rtdb.firebaseio.com/Login.json?auth=oahZAHcmPhj9gDp0HdkDFaCuGRt2pPZrX05YsdIl')
-            const users = response.data;
-            const userExist = Object.values(users).find(user => user.Username === username && user.Password === password );  
+            const usersRef = collection(db, "users");
+            const q = query(usersRef, where("namaLengkap", "==", namaLengkap));
+            const querySnapshot = await getDocs(q);
 
-            if(userExist) {
-                toast.success('berhasil login')
-                navigate('/dasboard')
-            }else(
-                toast.error('Tidak Berhasil Login')
-            )
+            console.log('Query Snapshot:', querySnapshot); // Debug
+
+            if (querySnapshot.empty) {
+                toast.error('Pengguna tidak ditemukan.');
+                return;
+            }
+
+            const userData = querySnapshot.docs[0].data();
+            console.log('User Data:', userData); // Debug
+
+            await signInWithEmailAndPassword(auth, userData.email, password);
+
+            if (userData.role === "Super Admin") {
+                navigate('/dasboard');
+                toast.success('Berhasil Login');
+            } else if (userData.role === "Admin") {
+                navigate('/dashboardAdmin');
+                toast.success('Berhasil Login');
+            } else {
+                navigate('/user');
+                toast.success('Berhasil Login');
+            }
         } catch (error) {
-            console.log("error data", error)
+            console.error('Login gagal:', error);
+            toast.error('Login gagal. Cek nama lengkap atau password.');
         }
-    }
+    };
 
-
-    return(
-        <div className='bg-white h-screen w-screen flex flex-col items-center justify-center '>
-            <div className='flex flex-row gap-3 w-[245px] items-center justify-start ms-5 absolute top-1 start-1 '>
+    return (
+        <div className='bg-white h-screen w-screen flex flex-col items-center justify-center'>
+            <div className='flex flex-row gap-3 w-[245px] items-center absolute top-1 start-1'>
                 <img className='w-14 lg:w-[100px]' src={LogoPerhutani} alt="" />
                 <img className='w-14 pt-2 lg:w-[100px]' src={Econique} alt="" />
             </div>
 
-            <div className='w-full max-w-[1080px] flex flex-col gap-5 -mt-16 items-center justify-center'>
+            <div className='w-full max-w-[1080px] flex flex-col gap-5 -mt-16 items-center'>
                 <p className='text-2xl font-outfit font-semibold text-black'>Masuk</p>
-                <form onSubmit={handleLogin} className='flex flex-col gap-3 justify-start items-center lg:max-w-[400px] lg:w-full' >
+                <form onSubmit={handleLogin} className='flex flex-col gap-3 items-center lg:max-w-[400px] w-full'>
                     <div className='flex flex-col w-full'>
                         <label className='text-black font-poppins text-[14px]'>Username</label>
-                        <input type="text" placeholder='Masukan Username'
-                         value={username}
-                         onChange={(e) => setUsername(e.target.value) }
-                         className='w-full border border-1 border-black shadow-md rounded-lg text-black font-outfit px-2 lg:py-3 py-2'/>
+                        <input
+                            type="text"
+                            placeholder='Masukan Username'
+                            value={namaLengkap}
+                            onChange={(e) => setNamaLengkap(e.target.value)}
+                            className='w-full border border-black shadow-md rounded-lg px-2 py-2 lg:py-3'
+                        />
                     </div>
+
                     <div className='flex flex-col relative w-full'>
                         <label className='text-black font-poppins text-[14px]'>Password</label>
-                        <input type={showPassword ? "text" : "password"} placeholder='Masukan Password'
-                         value={password}
-                         onChange={(e) => setPassword(e.target.value)}
-                         className='w-full border border-1 border-black shadow-md rounded-lg text-black font-outfit px-2 lg:py-3 py-2'/>
-
-                        <button type='button'
-                         className='absolute right-4 top-[42px] -translate-y-1/2'
-                         onClick={() => setShowPassword(!showPassword)}> 
-                            {showPassword ? <Icon icon="mdi:eye-off-outline" width={20} /> : <Icon icon="mdi:eye-outline" width={20} /> }
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            placeholder='Masukan Password'
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className='w-full border border-black shadow-md rounded-lg px-2 py-2 lg:py-3'
+                        />
+                        <button
+                            type='button'
+                            className='absolute right-4 top-[42px]'
+                            onClick={() => setShowPassword(!showPassword)}
+                        >
+                            <Icon icon={showPassword ? "mdi:eye-off-outline" : "mdi:eye-outline"} width={20} />
                         </button>
                     </div>
 
                     <Button
-                    type={'sumbit'}
-                    name={"Login"} 
-                    className={`text-[16px] w-full h-9`}
+                        type="submit"
+                        name="Login"
+                        className='text-[16px] w-full h-9'
                     />
-
                 </form>
             </div>
         </div>
-    )
+    );
 }

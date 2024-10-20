@@ -1,18 +1,54 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import btnNav from '../assets/ButtonNav.png';
 import { useNavigate } from 'react-router-dom';
+import { auth, db } from "../firebase"; // Pastikan Firebase diimpor jika role berasal dari Firestore
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
 export default function Navbar() {
     const [open, setOpen] = useState(false);
     const [selectedMenu, setSelectedMenu] = useState(""); // State untuk menyimpan menu yang dipilih
     const navigate = useNavigate();
+    const [userRole, setUserRole] = useState(null); // Menyimpan peran pengguna
+
 
     const Menu = [
         { title: "Dasboard", path: "/dasboard" },
         { title: "Reservasi Kegiatan", path: "/reservasi" },
-        { title: "Akses Akun", path: "/akses" },
         { title: "Log Out", path: "/" },
     ];
+
+    // Menu tambahan untuk Super Admin
+    const superAdminMenu = { title: "Akses Akun", path: "/akses" };
+
+    // Ambil role pengguna saat login
+    useEffect(() => {
+        const fetchUserRole = async (uid) => {
+            const docRef = doc(db, "users", uid);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                setUserRole(data.role); // Simpan role dari Firestore
+            }
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                fetchUserRole(user.uid);
+            } else {
+                navigate("/"); // Redirect jika tidak ada user yang login
+            }
+        });
+    }, [navigate]);
+
+    // Navigasi otomatis ke dashboard saat berada di root "/"
+    useEffect(() => {
+        if (location.pathname === "/") {
+            navigate("/dasboard");
+        }
+    }, [location, navigate]);
+
 
     const handleMenuClick = (item) => {
         setSelectedMenu(item.title); // Set judul menu yang diklik
@@ -76,6 +112,16 @@ export default function Navbar() {
                                 {item.title}
                             </li>
                         ))}
+                        {/* Tampilkan menu akses akun jika userRole adalah Super Admin */}
+                        {userRole === "Super Admin" && (
+                            <li
+                                onClick={() => navigate(superAdminMenu.path)}
+                                className="cursor-pointer font-poppins text-sm font-medium text-warnaDasar flex items-center 
+                                    lg:text-lg lg:hover:bg-warnaDasar lg:hover:text-white rounded-md p-2 transition-all duration-300"
+                            >
+                                {superAdminMenu.title}
+                            </li>
+                        )}
                     </ul>
                 </div>
 

@@ -57,17 +57,17 @@ export default function Dashboard() {
         <div className="relative w-full max-w-[1080px] ">
             {/* Header */}
             <div className='bg-white w-screen lg:w-screen items-center justify-start flex p-4 h-[63px] lg:sticky lg:top-0 lg:z-10 hidden lg:block'>
-                <h1 className='font-outfit text-[18px] lg:text-2xl font-medium hidden lg:block'>Dashboard </h1>
+                <h1 className='font-outfit text-[18px] lg:text-2xl font-medium hidden lg:block'>Dashboard Admin</h1>
             </div>
 
             <div className="grid grid-cols-2 gap-1 lg:grid-cols-4 justify-center items-center px-4 mt-3">
                 <div className="bg-white p-4 text-center rounded-lg">
                     <h2 className="font-poppins font-medium text-[14px] lg:text-lg">Fiks</h2>
-                    <p className="text-[14px] lg:text-2xl font-bold">{fiks}</p>                
+                    <p className="text-[14px] lg:text-2xl font-bold">{fiks}</p>
                 </div>
                 <div className="bg-white p-4 text-center rounded-lg">
                     <h2 className="font-poppins font-medium text-[14px] lg:text-lg">Reschedule</h2>
-                    <p className="text-[14px] lg:text-2xl font-bold">{ reschedule }</p>                
+                    <p className="text-[14px] lg:text-2xl font-bold">{reschedule}</p>
                 </div>
                 <div className="bg-white p-4 text-center rounded-lg">
                     <h2 className="font-poppins font-medium text-[14px] lg:text-lg">Omzet Perbulan</h2>
@@ -75,12 +75,12 @@ export default function Dashboard() {
                 </div>
                 <div className="bg-white p-4 text-center rounded-lg">
                     <h2 className="font-poppins font-medium text-[14px] lg:text-lg">Total Omzet</h2>
-                    <p className="text-[14px] lg:text-xl font-bold">Rp. {totalOmzet.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</p>                
+                    <p className="text-[14px] lg:text-xl font-bold">Rp. {totalOmzet.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</p>
                 </div>
             </div>
 
             <div className="mt-3">
-                <Cart/>
+                <Cart />
             </div>
 
         </div>
