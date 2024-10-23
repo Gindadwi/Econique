@@ -318,32 +318,44 @@ const Reservasi = () => {
 
         {/* Membuat Loading */}
         <div className='relative my-5 overflow-x-auto overflow-y-auto max-h-[450px] lg:max-h-[450px]'>
-          <table className='w-full text-sm lg:text-base table-auto'>
+          <table className='w-full text-sm overflow-x-auto relative  lg:text-base table-auto'>
             <thead className='bg-blue-700 text-black sticky top-0 z-10'>
               <tr>
-                <th className='px-5 py-2 font-outfit font-medium lg:font-semibold text-left'>Tanggal Mulai</th>
-                <th className='px-2 py-2 text-left'>Nama</th>
-                <th className='px-2 py-2 text-left'>Tempat</th>
-                <th className='px-2 py-2 text-left'>Sales</th>
-                <th className='px-2 py-2 text-left'>Omzet</th>
-                <th className='px-2 py-2 text-left'>Status</th>
-                <th className='px-2 py-2 text-center'>Aksi</th>
+                <th className='min-w-[150px] whitespace-nowrap px-5 py-2 font-outfit font-semibold lg:font-semibold text-center'>Tanggal Mulai</th>
+                <th className='min-w-[150px] whitespace-nowrap px-5 py-2 font-outfit font-semibold lg:font-semibold text-left'>Nama</th>
+                <th className='min-w-[150px] whitespace-nowrap px-5 py-2 font-outfit font-semibold lg:font-semibold text-left'>Institusi/Instansi/Corporate<br/>/Komunitas</th>
+                <th className='min-w-[150px] whitespace-nowrap px-5 py-2 font-outfit font-semibold lg:font-semibold text-left'>Daftar Gorup</th>
+                <th className='min-w-[150px] whitespace-nowrap px-5 py-2 font-outfit font-semibold lg:font-semibold text-left'>Alamat Kota</th>
+                <th className='min-w-[150px] whitespace-nowrap px-5 py-2 font-outfit font-semibold lg:font-semibold text-left'>No Tlp/WA</th>
+                <th className='min-w-[150px] whitespace-nowrap px-5 py-2 font-outfit font-semibold lg:font-semibold text-left'>Tempat</th>
+                <th className='min-w-[150px] whitespace-nowrap px-5 py-2 font-outfit font-semibold lg:font-semibold text-left'>Jenis Kegiatan</th>
+                <th className='min-w-[150px] whitespace-nowrap px-5 py-2 font-outfit font-semibold lg:font-semibold text-left'>Reguler/Paket</th>
+                <th className='min-w-[150px] whitespace-nowrap px-5 py-2 font-outfit font-semibold lg:font-semibold text-left'>Sales</th>
+                <th className='min-w-[150px] whitespace-nowrap px-5 py-2 font-outfit font-semibold lg:font-semibold text-left'>Omzet</th>
+                <th className='min-w-[150px] whitespace-nowrap px-5 py-2 font-outfit font-semibold lg:font-semibold text-left'>Status</th>
+                <th className='min-w-[150px] whitespace-nowrap px-5 py-2 font-outfit font-semibold lg:font-semibold text-left'>Aksi</th>
               </tr>
             </thead>
             <tbody>
               {filterData.map((reservasi, index) => (
                 <tr key={reservasi.id} className={index % 2 === 0 ? 'bg-green-100' : 'bg-white'}>
-                  <td className='px-5 py-2'>{reservasi.startDate}</td>
-                  <td className='px-2 py-2'>{reservasi.namaCustomer}</td>
-                  <td className="px-2 py-2 sm:px-4">
+                  <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap text-left'>{reservasi.startDate}</td>
+                  <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap text-left'>{reservasi.namaCustomer}</td>
+                  <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap text-left'>{reservasi.selectedOption}</td>
+                  <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap text-left'>{reservasi.instansiKeluarga}</td>
+                  <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap text-left'>{reservasi.alamat}</td>
+                  <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap text-left'>{reservasi.nomorHp}</td>
+                  <td className="px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap text-left">
                     {reservasi.wisata?.namaWisata && reservasi.wisata?.tempatWisata
                       ? `${reservasi.wisata.namaWisata} - ${reservasi.wisata.tempatWisata.join(', ')}`
                       : ""}
                   </td>
-                  <td className='px-2 py-2'>{reservasi.sales}</td>
-                  <td className='px-2 py-2'>{reservasi.omzet}</td>
-                  <td className='px-2 py-2'>{reservasi.selectedStatus}</td>
-                  <td className='flex flex-col lg:flex-row gap-4 items-center justify-center'>
+                  <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap text-left'>{reservasi.nameKegiatan}</td>
+                  <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap text-left'>{reservasi.pilihPaket}</td>
+                  <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap text-left'>{reservasi.sales}</td>
+                  <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap  text-left'>Rp. {reservasi.omzet}</td>
+                  <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap  text-left'>{reservasi.selectedStatus}</td>
+                  <td className='flex flex-row lg:flex-row gap-4 items-left justify-left'>
                     <button onClick={() => Navigate(`/detailData/${reservasi.id}`)}>
                       <img className='w-[16px] sm:w-[20px]' src={Edit} alt="Edit" />
                     </button>

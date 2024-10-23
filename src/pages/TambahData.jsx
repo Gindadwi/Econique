@@ -30,6 +30,7 @@ const TambahData = () => {
   const [jumlahDp, setJumlahDp] = useState("");
   const [omzet, setOmzet] = useState("");
   const [reservation, setReservation] = useState([]);
+  const [pilihPaket, setPilihPaket] = useState([]);
 
 
 
@@ -40,10 +41,20 @@ const TambahData = () => {
   const option = [
     {value: "Family", label: "Family"},
     {value: "Instansi", label: "Instansi"},
+    { value: "Corporate", label: "Corporate"},
+    { value: "Komunitas", label: "Komunitas"},
   ];
   // Akhir Kode Pilih Kategori
 
+  //Membuat Option untuk memilih paket
+  const handlePaket = (e) => {
+    setPilihPaket(e.target.value);
+  }
 
+  const paketReguler = [
+    {value: "Paket", label: "Paket"},
+    {value: "Reguler", label: "Reguler"},
+  ]
 
 
   // Membuat Option Untuk Kolom Status
@@ -54,7 +65,8 @@ const TambahData = () => {
     {value:"Informasi Awal", label:"Informasi Awal"},
     {value:"Surat Penawaran", label:"Surat Penawaran"},
     {value:"Fiks", label:"Fiks"},
-    {value: "Reschedule", label:"Reschedule"}
+    {value: "Reschedule", label:"Reschedule"},
+    {value: "Batal", label:"Batal"},
   ]
   // Kode akhir pilih starus
 
@@ -94,58 +106,64 @@ const TambahData = () => {
     fetchReservasi();
   }, []);
 
-
   const handleSumbitForm = async (e) => {
     e.preventDefault();
 
     // Validasi sederhana
-    if (!startDate || !finishDate || !namaCustomer || !nomorHp || !alamat || !jumlahPeserta || !sales || !selectedStatus || !nameKegiatan || !instansiKeluarga) {
+    if (
+      !startDate || !finishDate || !namaCustomer || !nomorHp ||
+      !alamat || !jumlahPeserta || !sales || !selectedStatus ||
+      !nameKegiatan || !instansiKeluarga
+    ) {
       toast.error("Semua field yang diperlukan harus diisi!");
       return;
     }
 
-
     // Format tanggal tanpa waktu menggunakan date-fns
     const formattedStartDate = startDate ? format(startDate, 'yyyy-MM-dd') : null;
-    const formattedStartDP = startDP ? format(startDP, 'yyyy-MM-dd') : null;
     const formattedFinishDate = finishDate ? format(finishDate, 'yyyy-MM-dd') : null;
 
-
-
-    // Membuat pesan error ketika tanggal dan tempat pesanan sama
+    // Validasi jika tanggal dan tempat wisata sama
     const duplicateFound = reservation.some(reservation => {
-      return reservation.startDate === formattedStartDate &&
-        reservation.wisata.tempatWisata === wisata.tempatWisata;
+      const tempatTerdaftar = reservation.wisata.tempatWisata; // Tempat yang sudah dipesan
+      const tempatDipilih = wisata.tempat.map(t => t.label); // Tempat yang dipilih user
+
+      // Cek jika ada tempat yang sama di tanggal yang sama
+      return (
+        reservation.startDate === formattedStartDate &&
+        tempatDipilih.some(tempat => tempatTerdaftar.includes(tempat)) // Tempat bentrok
+      );
     });
 
     if (duplicateFound) {
-      toast.error("Tanggal dan Tempat sudah ada");
+      toast.error("Tanggal dan tempat wisata sudah dibooking.");
       return;
     }
 
-    // Cek untuk bentrokan tanggal
+    // Cek jika ada rentang tanggal bertabrakan di wisata yang sama (jika perlu)
     const isDateRangeOverlapping = (existingStart, existingFinish, newStart, newFinish) => {
       return (newStart <= existingFinish && newFinish >= existingStart);
     };
 
-    const duplicateDate = reservation.some(reservation => {
-      const existingStart = reservation.startDate; // Tanggal mulai yang sudah ada
-      const existingFinish = reservation.finishDate; // Tanggal selesai yang sudah ada
+    const overlappingDate = reservation.some(reservation => {
+      const existingStart = reservation.startDate;
+      const existingFinish = reservation.finishDate;
 
-      return isDateRangeOverlapping(existingStart, existingFinish, formattedStartDate, formattedFinishDate);
+      return (
+        isDateRangeOverlapping(existingStart, existingFinish, formattedStartDate, formattedFinishDate) &&
+        reservation.wisata.tempatWisata.some(tempat => wisata.tempat.map(t => t.label).includes(tempat)) // Tempat bentrok dalam rentang tanggal
+      );
     });
 
-    if (duplicateDate) {
-      toast.error("Sudah Ada Kegiatan di Tanggal ini");
+    if (overlappingDate) {
+      toast.error("Sudah ada kegiatan di tempat yang sama dalam rentang tanggal ini.");
       return;
     }
-    // Akhir kodingan membuat peringatan error tanggan dan tempat 
 
-
+    // Jika validasi lolos, lanjutkan dengan membuat data booking
     const data = {
-      startDate: formattedStartDate,      
+      startDate: formattedStartDate,
       finishDate: formattedFinishDate,
-      waktu,
       namaCustomer,
       nomorHp,
       alamat,
@@ -153,25 +171,29 @@ const TambahData = () => {
       instansiKeluarga,
       nameKegiatan,
       wisata: {
-        namaWisata: wisata.wisata.label,  // Mengambil nama wisata
-        tempatWisata: wisata.tempat.map(t => t.label)  // Mengambil nama tempat
-      },      
+        namaWisata: wisata.wisata.label,
+        tempatWisata: wisata.tempat.map(t => t.label),
+      },
       jumlahPeserta,
+      pilihPaket,
       sales,
       selectedStatus,
       jumlahDp,
-      startDP: formattedStartDP,
+      startDP: formattedStartDate,
       omzet,
     };
 
     try {
-      const response = await axios.post('https://econique-perhutani-default-rtdb.firebaseio.com/ReservasiKegiatan.json?auth=oahZAHcmPhj9gDp0HdkDFaCuGRt2pPZrX05YsdIl', data)
-      toast.success("Data Berhasil ditambahkan");
-      console.log("data berhasil di kirim", response.data);
+      const response = await axios.post(
+        'https://econique-perhutani-default-rtdb.firebaseio.com/ReservasiKegiatan.json?auth=oahZAHcmPhj9gDp0HdkDFaCuGRt2pPZrX05YsdIl',
+        data
+      );
+      toast.success("Data berhasil ditambahkan");
+      console.log("Data berhasil dikirim", response.data);
+
       // Reset form setelah sukses
       setStartDate(null);
       setFinishDate(null);
-      setWaktu("");
       setNamaCustomer("");
       setNomorHp("");
       setAlamat("");
@@ -180,19 +202,17 @@ const TambahData = () => {
       setNameKegiatan("");
       setWisata("");  // Reset wisata
       setJumlahPeserta("");
+      setPilihPaket("");
       setSales("");
       setSelectedStatus("");
       setJumlahDp("");
-      setStartDP(null);
       setOmzet("");
     } catch (error) {
-      console.log("error", error.data);
-      toast.error("data gagal ditambahkan")
+      console.error("Error", error);
+      toast.error("Data gagal ditambahkan");
     }
+  };
 
-  }
-
-  // Membuat Kode error saat tanggan dan tempat sudah di boking
 
 
 
@@ -202,7 +222,7 @@ const TambahData = () => {
       <div className="relative w-full max-w-[1180px] h-screen overflow-y-auto overflow-x-hidden">
         {/* Header */}
         <div className='bg-white w-screen lg:w-screen items-center justify-start flex p-4 h-[63px] lg:sticky lg:top-0 lg:z-10 hidden lg:block'>
-          <h1 className='font-outfit text-[18px] lg:text-2xl font-medium hidden lg:block'>Dashboard</h1>
+          <h1 className='font-outfit text-[18px] lg:text-2xl font-medium hidden lg:block'>Tambah Data</h1>
         </div>
 
 
@@ -234,19 +254,6 @@ const TambahData = () => {
                 />
               </div>
 
-              {/* Waktu Mulai */}
-              <div className='flex flex-col'>
-                <label className="font-outfit font-medium">Jam Mulai</label>
-                <input type="text"
-                  value={waktu}
-                  onChange={(e) => setWaktu(e.target.value)}
-                  className="w-full h-14 rounded-md px-3 font-outfit border border-1 border-black"
-                  placeholder='Waktu' />
-              </div>
-            </div>
-
-            {/* Baris Kedua Form Tambah Data */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
               {/* Nama Customer */}
               <div className='flex flex-col'>
                 <label className="font-outfit font-medium">Nama Customer</label>
@@ -257,6 +264,10 @@ const TambahData = () => {
                   placeholder="Masukan Nama Customer" />
               </div>
 
+            </div>
+
+            {/* Baris Kedua Form Tambah Data */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
               {/* Nomor HP */}
               <div className='flex flex-col'>
                 <label className="font-outfit font-medium">Nomor Telp</label>
@@ -276,10 +287,6 @@ const TambahData = () => {
                   className="w-full h-14 rounded-md px-3 font-outfit border border-1 border-black"
                   placeholder="Masukan Alamat Customer" />
               </div>
-            </div>
-
-            {/* Baris Ketiga Form Tambah Data */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
               {/* Pilihan Kategori */}
               <div className='flex flex-col'>
                 <label className="font-outfit font-medium">Kelompok</label>
@@ -291,14 +298,18 @@ const TambahData = () => {
                 />
               </div>
 
+            </div>
+
+            {/* Baris Ketiga Form Tambah Data */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
               {/* Nama Instansi atau Keluarga */}
               <div className='flex flex-col'>
-                <label className="font-outfit font-medium">Nama Instansi/Keluarga</label>
+                <label className="font-outfit font-medium">Daftar Group</label>
                 <input type="text"
                   value={instansiKeluarga}
                   onChange={(e) => setInstansiKeluarga(e.target.value)}
                   className="w-full h-14 rounded-md px-3 font-outfit border border-1 border-black"
-                  placeholder="Nama Instansi/Keluarga" />
+                  placeholder="Masukan nama group" />
               </div>
 
               {/* Nama Kegiatan */}
@@ -310,10 +321,7 @@ const TambahData = () => {
                   className="w-full h-14 rounded-md px-3 font-outfit border border-1 border-black"
                   placeholder="Masukan Nama Kegiatan" />
               </div>
-            </div>
 
-            {/* Baris KeEmpat Form Tambah Data */}
-            <div className='grid grid-cols-1 lg:grid-cols-3 gap-6 w-full'>
               <div className='flex flex-col'>
                 {/* Option Pilih tempat wisata */}
                 <label className="font-outfit font-medium">Tempat Wisata</label>
@@ -324,6 +332,23 @@ const TambahData = () => {
                   onChange={(e) => setWisata(e.target.value)}
                 />
               </div>
+
+            </div>
+
+            {/* Baris KeEmpat Form Tambah Data */}
+            <div className='grid grid-cols-1 lg:grid-cols-3 gap-6 w-full'>
+
+              <div className='flex flex-col'>
+                {/* Status Fix atau reschedule */}
+                <label className="font-outfit font-medium">Reguler/paket</label>
+                <Option
+                  name={"Pilih Paket"}
+                  value={pilihPaket}
+                  onChange={handlePaket}
+                  options={paketReguler}
+                />
+              </div>
+
               {/* Jumlah Peserta */}
               <div className='flex flex-col'>
                 <label className="font-outfit font-medium">Jumlah Peserta</label>

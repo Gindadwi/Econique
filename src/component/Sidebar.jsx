@@ -16,6 +16,7 @@ export default function Sidebar() {
     const Menu = [
         { title: "Dasboard", path: "/dasboard" },
         { title: "Reservasi Kegiatan", path: "/reservasi" },
+        
         { title: "Log Out", path: "/" },
     ];
 

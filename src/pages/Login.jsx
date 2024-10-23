@@ -58,7 +58,8 @@ export default function Login() {
             </div>
 
             <div className='w-full max-w-[1080px] flex flex-col gap-5 -mt-16 items-center'>
-                <p className='text-2xl font-outfit font-semibold text-black'>Masuk</p>
+                <p className='text-2xl font-outfit font-semibold text-black'>Daily Checklist Event</p>
+                <p className='text-2xl font-outfit font-semibold text-black'>Klaster Banyumas</p>
                 <form onSubmit={handleLogin} className='flex flex-col px-5 gap-3 items-center lg:max-w-[400px] w-full'>
                     <div className='flex flex-col w-full'>
                         <label className='text-black font-poppins text-[14px]'>Username</label>
