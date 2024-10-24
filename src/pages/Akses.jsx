@@ -1,52 +1,90 @@
 import React, { useState } from 'react';
 import Button from '../common/Button';
 import Option from '../common/Option';
-import { auth, db } from "../firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
-
+import { auth, db } from "../firebase"; // Firebase configuration and initialization
+import toast from 'react-hot-toast'; // Notification library
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { setDoc, doc } from "firebase/firestore";
 const Akses = () => {
+  // State untuk menyimpan data dari form
   const [formData, setFormData] = useState({
     namaLengkap: '',
     email: '',
     noTelepon: '',
     alamat: '',
     password: '',
-    role: '',
+    role: ''
   });
 
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
-
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    try {
-      const { email, password } = formData;
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      // Simpan data pengguna ke Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        ...formData,
-        uid: user.uid,
-      });
-
-      alert('Akun berhasil dibuat');
-    } catch (error) {
-      console.error('Error saat membuat akun:', error);
-      alert('Terjadi kesalahan saat mendaftarkan akun.');
-    }
-  };
-
+  // Data Kategori untuk Role pengguna
   const Kategori = [
     { value: 'Super Admin', label: 'Super Admin' },
     { value: 'Admin', label: 'Admin' },
     { value: 'User', label: 'User' },
   ];
+
+  // Fungsi untuk handle perubahan input
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+
+
+  // Fungsi untuk melakukan register
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    // Save the current user (Super Admin) before creating a new account
+    const currentUser = auth.currentUser;
+
+    try {
+      // Buat user baru dengan email dan password
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+
+      const newUser = userCredential.user;
+
+      // Update Firestore untuk menyimpan data tambahan
+      await setDoc(doc(db, "users", newUser.uid), {
+        namaLengkap: formData.namaLengkap,
+        email: formData.email,
+        noTelepon: formData.noTelepon,
+        alamat: formData.alamat,
+        role: formData.role,
+        createdAt: new Date(),
+      });
+
+      // Tampilkan notifikasi sukses
+      toast.success("Pengguna berhasil didaftarkan!");
+
+      // Kosongkan form setelah registrasi
+      setFormData({
+        namaLengkap: "",
+        email: "",
+        noTelepon: "",
+        alamat: "",
+        password: "",
+        role: "",
+      });
+
+      // Setelah berhasil membuat user baru, kembalikan sesi ke Super Admin
+      if (currentUser) {
+        // Log back into the Super Admin account
+        await auth.updateCurrentUser(currentUser);
+      }
+
+    } catch (error) {
+      // Tangani error
+      toast.error(`Error: ${error.message}`);
+    }
+  };
+
 
   return (
     <div className='px-4 lg:px-0'>
@@ -55,7 +93,6 @@ const Akses = () => {
       </div>
 
       <form className='relative max-w-[1080px] mx-auto mt-8 flex flex-col gap-4' onSubmit={handleRegister}>
-
         <div className='lg:grid lg:grid-cols-2 lg:gap-4'>
           <div className='grid grid-cols-1 gap-4'>
             <div className='flex flex-col w-full'>

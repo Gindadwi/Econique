@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Search from '../common/search';
 import Button from '../common/Button';
@@ -7,10 +7,8 @@ import { toast } from 'react-hot-toast'; // Import toast untuk menampilkan notif
 import jsPDF from 'jspdf'; // Import jsPDF untuk download PDF
 import 'jspdf-autotable'; // Import AutoTable untuk membuat tabel dalam PDF
 import { Navigate, useNavigate, Link } from 'react-router-dom';
-import Swal from 'sweetalert2';
 
 
-import Hapus from '../assets/delete.png'
 import Edit from '../assets/Edit.png'
 
 const Reservasi = () => {
@@ -240,40 +238,6 @@ const Reservasi = () => {
   // Render halaman reservasi
 
 
-  //Membuat kode hapus data 
-
-  const handleDelete = (id) => {
-    Swal.fire({
-      title: 'Apakah Anda yakin?',
-      text: 'Data yang dihapus tidak dapat dikembalikan!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Ya, Hapus!',
-      cancelButtonText: 'Batal',
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await axios.delete(
-            `https://econique-perhutani-default-rtdb.firebaseio.com/ReservasiKegiatan/${id}.json?auth=oahZAHcmPhj9gDp0HdkDFaCuGRt2pPZrX05YsdIl`
-          );
-          toast.success('Data berhasil dihapus'); // Notifikasi jika berhasil
-
-          // Update state tanpa data yang dihapus
-          setReservasiData((prevData) => prevData.filter((item) => item.id !== id));
-          setFilterData((prevData) => prevData.filter((item) => item.id !== id));
-
-          Swal.fire('Terhapus!', 'Data berhasil dihapus.', 'success');
-        } catch (error) {
-          console.error('Error deleting data:', error);
-          toast.error('Gagal menghapus data'); // Notifikasi jika gagal
-        }
-      }
-    });
-  };
-
-
 
 
   return (
@@ -289,7 +253,6 @@ const Reservasi = () => {
 
           <div className=' flex flex-col lg:flex lg:flex-row gap-3'>
             <div className='flex gap-2'>
-              <Button name="Tambah" className={' w-24 h-9 text-center text-[14px]  lg:text-[24px] lg:w-36 lg:h-[56px]'} onClick={() => Navigate('/tambahData')} />              {/* Membuat Button Download */}
               <div className='flex flex-col relative'>
                 <Button img={IconDownload}
                   className={'w-14 h-9 lg:h-[56px] items-center justify-center flex'}
@@ -396,12 +359,10 @@ const Reservasi = () => {
                   <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap  text-left'>Rp. {reservasi.omzet}</td>
                   <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap  text-left'>{reservasi.selectedStatus}</td>
                   <td className='flex flex-row lg:flex-row gap-4 items-left justify-left'>
-                    <button onClick={() => Navigate(`/detailData/${reservasi.id}`)}>
+                    <button onClick={() => Navigate(`/detailUsers/${reservasi.id}`)}>
                       <img className='w-[16px] sm:w-[20px]' src={Edit} alt="Edit" />
                     </button>
-                    <button onClick={() => handleDelete(reservasi.id)}>
-                      <img className='w-[24px] sm:w-[25px]' src={Hapus} alt="Hapus" />
-                    </button>
+
                   </td>
                 </tr>
               ))}

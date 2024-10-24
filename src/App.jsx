@@ -11,6 +11,9 @@ import Login from './pages/Login';
 import { useState } from 'react';
 import NavMenu from './component/NavMenu'
 import DasboardAdmin from './Admin/DasboardAdmin'
+import DasboardUsers from './Users/DasboardUsers'
+import DetailUsers from './Users/DetailUsers'
+import ReservasiUsers from './Users/ReservasiUsers'
 
 function App() {
   const location = useLocation();
@@ -47,6 +50,9 @@ function App() {
           <Route path="/tambahData" element={<TambahData />} />
           <Route path="/detailData/:id" element={<Detail />} />
           <Route path="/akses" element={<Akses />} />
+          <Route path="/dashboardUsers" element={<DasboardUsers />} />
+          <Route path="/detailUsers" element={<DetailUsers />} />
+          <Route path="/reservasiUsers" element={<ReservasiUsers />} />
           <Route path="/dashboardAdmin" element={<DasboardAdmin />} />
         </Routes>      
       </div>

@@ -80,7 +80,7 @@ const BarChartMobile = () => {
     }, [yearFilter]);
 
     return (
-        <div className="w-full flex flex-col items-start px-2 lg:px-4 lg:pb-4">
+        <div className="w-full flex flex-col items-start  lg:px-4 lg:pb-4">
             <div className="bg-white p-4 rounded-lg shadow-md w-full max-w-lg lg:max-w-lg">
                 <h2 className="text-lg font-semibold mb-4 text-center">Grafik Reservasi</h2>
 

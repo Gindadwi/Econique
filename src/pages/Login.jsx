@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { auth, db } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { collection, query, where, getDocs } from "firebase/firestore";
+import Swal from 'sweetalert2';
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
@@ -36,13 +37,31 @@ export default function Login() {
 
             if (userData.role === "Super Admin") {
                 navigate('/dasboard');
-                toast.success('Berhasil Login');
+                Swal.fire({
+                    title: 'Berhasil Login',
+                    text: 'Anda Login Sebagai Super Admin',
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1800
+                });
             } else if (userData.role === "Admin") {
                 navigate('/dashboardAdmin');
-                toast.success('Berhasil Login');
-            } else {
-                navigate('/user');
-                toast.success('Berhasil Login');
+                Swal.fire({
+                    title: 'Berhasil Login',
+                    text: 'Anda Login Sebagai Super Admin',
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1800
+                });
+            } else if (userData.role === "User") {
+                navigate('/dashboardUsers');
+                Swal.fire({
+                    title: 'Berhasil Login',
+                    text: 'Anda Login Sebagai Super Admin',
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1800
+                });
             }
         } catch (error) {
             console.error('Login gagal:', error);
@@ -58,8 +77,10 @@ export default function Login() {
             </div>
 
             <div className='w-full max-w-[1080px] flex flex-col gap-5 -mt-16 items-center'>
-                <p className='text-2xl font-outfit font-semibold text-black'>Daily Checklist Event</p>
-                <p className='text-2xl font-outfit font-semibold text-black'>Klaster Banyumas</p>
+                <div className='flex flex-col gap-1 justify-center items-center'>
+                    <p className='text-2xl font-poppins font-semibold text-black'>Daily Checklist Event</p>
+                    <p className='text-2xl font-outfit font-semibold text-black'>Klaster Banyumas</p>
+                </div>
                 <form onSubmit={handleLogin} className='flex flex-col px-5 gap-3 items-center lg:max-w-[400px] w-full'>
                     <div className='flex flex-col w-full'>
                         <label className='text-black font-poppins text-[14px]'>Username</label>

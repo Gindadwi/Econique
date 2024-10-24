@@ -114,6 +114,36 @@ export default function Detail() {
     setter(formatNumber(inputValue)); // Format and set value
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const updatedData = {
+      ...data,
+      startDate: startDate ? format(startDate, 'yyyy-MM-dd') : null,
+      namaCustomer,
+      nomorHp,
+      nameKegiatan,
+      jumlahPeserta,
+      jumlahDp,
+      omzet,
+      pilihPaket,
+      sales,
+      selectedOption,
+      selectedStatus,
+      wisata,
+    };
+
+    try {
+      await axios.put(
+        `https://econique-perhutani-default-rtdb.firebaseio.com/ReservasiKegiatan/${id}.json?auth=oahZAHcmPhj9gDp0HdkDFaCuGRt2pPZrX05YsdIl`,
+        updatedData
+      );
+      toast.success('Data berhasil diubah!');
+    } catch (error) {
+      console.error('Error updating data:', error);
+    }
+  };
+
 
 
   return (
@@ -125,7 +155,7 @@ export default function Detail() {
         </div>
 
         <div className="w-full mb-[130px] px-4 lg:px-8 mt-5">
-          <form className=" flex flex-col gap-6 items-center justify-center" >
+          <form onSubmit={handleSubmit} className=" flex flex-col gap-6 items-center justify-center" >
             {/* Baris Pertama Form Tambah Data */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
               {/* Tanggal Mulai */}

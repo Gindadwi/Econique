@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import Econique from '../assets/Econique.png';
 import ButtonNav from '../assets/ButtonNav.png'; // Tidak digunakan dalam contoh ini, pastikan relevan
 import { auth, db } from "../firebase"; // Pastikan Firebase diimpor jika role berasal dari Firestore
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
+import Swal from "sweetalert2";
 
 export default function Sidebar() {
     const navigate = useNavigate();
@@ -12,16 +13,31 @@ export default function Sidebar() {
     const [isSidebarSmall, setIsSidebarSmall] = useState(true);
     const [userRole, setUserRole] = useState(null); // Menyimpan peran pengguna
 
-    // Daftar menu utama
-    const Menu = [
-        { title: "Dasboard", path: "/dasboard" },
+    // Daftar menu Admin
+    const MenuAdmin = [
+        { title: "Dasboard", path: "/dashboardAdmin" },
         { title: "Reservasi Kegiatan", path: "/reservasi" },
-        
         { title: "Log Out", path: "/" },
     ];
 
-    // Menu tambahan untuk Super Admin
-    const superAdminMenu = { title: "Akses Akun", path: "/akses" };
+    //Daftar menu super admin
+    const manuSuperAdmin = [
+        { title: "Dashboard", path: "/dasboard" },
+        { title: "Reservasi Kegiatan", path: "/reservasi" },
+        { title: "Akses Akun", path: "/akses" },
+        { title: "Log Out", path: "/" },
+    ]
+
+
+    //Daftar menu users
+    const manuUsers = [
+        { title: "Dashboard", path: "/dashboardUsers" },
+        { title: "Reservasi Kegiatan", path: "/reservasiUsers" },
+        { title: "Log Out", path: "/" },
+    ]
+
+
+
 
     const toggleSidebar = () => {
         setIsSidebarSmall(!isSidebarSmall);
@@ -43,17 +59,36 @@ export default function Sidebar() {
             if (user) {
                 fetchUserRole(user.uid);
             } else {
-                navigate("/"); // Redirect jika tidak ada user yang login
+                navigate("/");
             }
         });
     }, [navigate]);
 
     // Navigasi otomatis ke dashboard saat berada di root "/"
-    useEffect(() => {
-        if (location.pathname === "/") {
-            navigate("/dasboard");
+
+
+
+    //Membuat fungsi LogOut 
+
+    const handleLogout = async () => {
+        try {
+            await signOut(auth);// akan pergi ke halaman login
+            navigate("/");
+            Swal.fire({
+                title: 'Berhasil Logout',
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1800
+            });
+        } catch (error) {
+            console.error("Logout gagal:", error);
+            Swal.fire({
+                title: 'Logout Gagal',
+                text: 'Terjadi kesalahan saat logout. Silakan coba lagi.',
+                icon: "error"
+            });
         }
-    }, [location, navigate]);
+    }
 
     return (
         <>
@@ -64,30 +99,45 @@ export default function Sidebar() {
                     </div>
 
                     <ul className={`lg:space-y-2 lg:items-center lg:justify-center mt-10 hidden lg:block`}>
-                        {/* Tampilkan menu utama */}
-                        {Menu.map((menu, index) => (
-                            <li
-                                key={index}
-                                onClick={() => navigate(menu.path)}
-                                className="cursor-pointer font-poppins text-sm font-medium text-warnaDasar flex items-center 
-                                    lg:text-lg lg:hover:bg-warnaDasar lg:hover:text-white rounded-md p-2 transition-all duration-300"
-                            >
-                                {menu.title}
-                            </li>
-                        ))}
-
-                        {/* Tampilkan menu akses akun jika userRole adalah Super Admin */}
-                        {userRole === "Super Admin" && (
-                            <li
-                                onClick={() => navigate(superAdminMenu.path)}
-                                className="cursor-pointer font-poppins text-sm font-medium text-warnaDasar flex items-center 
-                                    lg:text-lg lg:hover:bg-warnaDasar lg:hover:text-white rounded-md p-2 transition-all duration-300"
-                            >
-                                {superAdminMenu.title}
-                            </li>
-                        )}
-                        
+                        {/* Menu based on the user's role */}
+                        {(() => {
+                            if (userRole === "Super Admin") {
+                                return manuSuperAdmin.map((menu, index) => (
+                                    <li
+                                        key={index}
+                                        onClick={menu.title === "Log Out" ? handleLogout : () => navigate(menu.path)}
+                                        className="cursor-pointer font-poppins text-sm font-medium text-warnaDasar flex items-center 
+                                lg:text-lg lg:hover:bg-warnaDasar lg:hover:text-white rounded-md p-2 transition-all duration-300"
+                                    >
+                                        {menu.title}
+                                    </li>
+                                ));
+                            } else if (userRole === "Admin") {
+                                return MenuAdmin.map((menu, index) => (
+                                    <li
+                                        key={index}
+                                        onClick={menu.title === "Log Out" ? handleLogout : () => navigate(menu.path)}
+                                        className="cursor-pointer font-poppins text-sm font-medium text-warnaDasar flex items-center 
+                                lg:text-lg lg:hover:bg-warnaDasar lg:hover:text-white rounded-md p-2 transition-all duration-300"
+                                    >
+                                        {menu.title}
+                                    </li>
+                                ));
+                            } else {
+                                return manuUsers.map((menu, index) => (
+                                    <li
+                                        key={index}
+                                        onClick={menu.title === "Log Out" ? handleLogout : () => navigate(menu.path)}
+                                        className="cursor-pointer font-poppins text-sm font-medium text-warnaDasar flex items-center 
+                                lg:text-lg lg:hover:bg-warnaDasar lg:hover:text-white rounded-md p-2 transition-all duration-300"
+                                    >
+                                        {menu.title}
+                                    </li>
+                                ));
+                            }
+                        })()}
                     </ul>
+
                 </div>
             </div>
         </>
