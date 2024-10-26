@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import btnNav from '../assets/ButtonNav.png';
+import Econique from '../assets/Econique.png'
 import { useNavigate } from 'react-router-dom';
 import { auth, db } from "../firebase"; // Pastikan Firebase diimpor jika role berasal dari Firestore
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
+import Swal from 'sweetalert2';
+
 
 export default function Navbar() {
     const [open, setOpen] = useState(false);
@@ -12,14 +15,30 @@ export default function Navbar() {
     const [userRole, setUserRole] = useState(null); // Menyimpan peran pengguna
 
 
-    const Menu = [
-        { title: "Dasboard", path: "/dasboard" },
+    // Daftar menu Admin
+    const MenuAdmin = [
+        { title: "Dasboard", path: "/dashboardAdmin" },
         { title: "Reservasi Kegiatan", path: "/reservasi" },
         { title: "Log Out", path: "/" },
     ];
 
-    // Menu tambahan untuk Super Admin
-    const superAdminMenu = { title: "Akses Akun", path: "/akses" };
+    //Daftar menu super admin
+    const manuSuperAdmin = [
+        { title: "Dashboard", path: "/dasboard" },
+        { title: "Reservasi Kegiatan", path: "/reservasi" },
+        { title: "Akses Akun", path: "/akses" },
+        { title: "Detail Pengguna", path: "/detailPengguna"},
+        { title: "Log Out", path: "/" },
+    ]
+
+
+    //Daftar menu users
+    const manuUsers = [
+        { title: "Dashboard", path: "/dashboardUsers" },
+        { title: "Reservasi Kegiatan", path: "/reservasiUsers" },
+        { title: "Log Out", path: "/" },
+    ]
+
 
     // Ambil role pengguna saat login
     useEffect(() => {
@@ -42,39 +61,44 @@ export default function Navbar() {
         });
     }, [navigate]);
 
-    // Navigasi otomatis ke dashboard saat berada di root "/"
-    useEffect(() => {
-        if (location.pathname === "/") {
-            navigate("/dasboard");
+ 
+
+
+
+
+    //Membuat fungsi LogOut 
+
+    const handleLogout = async () => {
+        try {
+            await signOut(auth);// akan pergi ke halaman login
+            navigate("/");
+            Swal.fire({
+                title: 'Berhasil Logout',
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1800
+            });
+        } catch (error) {
+            console.error("Logout gagal:", error);
+            Swal.fire({
+                title: 'Logout Gagal',
+                text: 'Terjadi kesalahan saat logout. Silakan coba lagi.',
+                icon: "error"
+            });
         }
-    }, [location, navigate]);
-
-
-    const handleMenuClick = (item) => {
-        setSelectedMenu(item.title); // Set judul menu yang diklik
-        setOpen(false); // Tutup menu mobile setelah dipilih
-        navigate(item.path); // Navigasi ke halaman
-    };
+    }
 
     return (
         <div className='relative'>
             {/* Kontainer utama navbar */}
             <div className="flex w-full min-w-[360px] items-center">
                 {/* Header yang tetap di bagian atas */}
-                <header className="bg-white w-full sticky z-20 top-0 start-0 py-5">
+                <header className="bg-white w-full sticky z-20 top-0 py-3">
                     {/* Kontainer isi header */}
-                    <div className='px-4 grid grid-cols-2 items-center justify-between text-2xl font-semibold font-outfit mx-auto max-w-[1080px]'>
+                    <div className=' px-4 grid grid-cols-2 items-center justify-between text-2xl font-semibold font-outfit mx-auto max-w-[1080px]'>
                         {/* Bagian kiri: title menu yang dipilih */}
-                        <div className=' items-center gap-5'>
-                            {selectedMenu && (
-                                <span className='text-black text-[18px] font-medium'>
-                                    {selectedMenu}
-                                </span>
-                            )}
-                        </div>
-
                         {/* Bagian kanan header: Navigasi dan tombol Register */}
-                        <div className='w-full flex items-end justify-end gap-5'>
+                        <div className='w-full flex '>
                             {/* Tombol navigasi mobile (hamburger menu) */}
                             <img
                                 src={btnNav} // Sumber gambar tombol navigasi
@@ -83,11 +107,21 @@ export default function Navbar() {
                                 onClick={() => setOpen(!open)} // Handler saat tombol diklik
                             />
                         </div>
+                        {/* Bagian kanan header: Navigasi dan tombol Register */}
+                        <div className='w-full flex items-end justify-end'>
+                            {/* Tombol navigasi mobile (hamburger menu) */}
+                            <img
+                                src={Econique} // Sumber gambar tombol navigasi
+                                className='w-10 cursor-pointer block md:hidden' // Kelas CSS: tampilkan hanya di layar kecil
+                                alt='Button Nav' // Alt text untuk aksesibilitas
+                                onClick={() => setOpen(!open)} // Handler saat tombol diklik
+                            />
+                        </div>
                     </div>
                 </header>
 
                 {/* Menu navigasi untuk mobile, muncul saat open true */}
-                <div className={`fixed top-0 right-0 h-full w-1/2 bg-white shadow-lg transform ${open ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 ease-in-out z-50 lg:hidden`}>
+                <div className={`fixed top-0 left-0 h-full w-1/2 bg-white shadow-lg transform ${open ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out z-50 lg:hidden`}>
                     {/* Tombol close menu mobile */}
                     <div className='flex justify-end m-5'>
                         <button
@@ -102,27 +136,46 @@ export default function Navbar() {
                         </button>
                     </div>
                     {/* Navigasi mobile */}
-                    <ul className='flex flex-col gap-5 ps-5 pt-6 text-black'>
-                        {Menu.map((item, index) => (
-                            <li
-                                key={index}
-                                onClick={() => handleMenuClick(item)} // Handler untuk klik menu
-                                className="cursor-pointer"
-                            >
-                                {item.title}
-                            </li>
-                        ))}
-                        {/* Tampilkan menu akses akun jika userRole adalah Super Admin */}
-                        {userRole === "Super Admin" && (
-                            <li
-                                onClick={() => navigate(superAdminMenu.path)}
-                                className="cursor-pointer font-poppins text-sm font-medium text-black
-                                    lg:text-lg lg:hover:bg-warnaDasar lg:hover:text-white rounded-md p-2 transition-all duration-300"
-                            >
-                                {superAdminMenu.title}
-                            </li>
-                        )}
+                    <ul className={`lg:space-y-2 lg:items-center lg:justify-center mt-10`}>
+                        {/* Menu based on the user's role */}
+                        {(() => {
+                            if (userRole === "Super Admin") {
+                                return manuSuperAdmin.map((menu, index) => (
+                                    <li
+                                        key={index}
+                                        onClick={menu.title === "Log Out" ? handleLogout : () => navigate(menu.path)}
+                                        className="cursor-pointer font-poppins text-sm font-medium text-black flex items-center 
+                                lg:text-lg lg:hover:bg-warnaDasar lg:hover:text-white rounded-md p-2 transition-all duration-300"
+                                    >
+                                        {menu.title}
+                                    </li>
+                                ));
+                            } else if (userRole === "Admin") {
+                                return MenuAdmin.map((menu, index) => (
+                                    <li
+                                        key={index}
+                                        onClick={menu.title === "Log Out" ? handleLogout : () => navigate(menu.path)}
+                                        className="cursor-pointer font-poppins text-sm font-medium text-black flex items-center 
+                                lg:text-lg lg:hover:bg-warnaDasar lg:hover:text-white rounded-md p-2 transition-all duration-300"
+                                    >
+                                        {menu.title}
+                                    </li>
+                                ));
+                            } else {
+                                return manuUsers.map((menu, index) => (
+                                    <li
+                                        key={index}
+                                        onClick={menu.title === "Log Out" ? handleLogout : () => navigate(menu.path)}
+                                        className="cursor-pointer font-poppins text-sm font-medium text-black flex items-center 
+                                lg:text-lg lg:hover:bg-warnaDasar lg:hover:text-white rounded-md p-2 transition-all duration-300"
+                                    >
+                                        {menu.title}
+                                    </li>
+                                ));
+                            }
+                        })()}
                     </ul>
+
                 </div>
 
                 {/* Overlay latar belakang saat menu mobile terbuka */}

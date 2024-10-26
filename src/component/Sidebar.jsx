@@ -6,6 +6,11 @@ import { auth, db } from "../firebase"; // Pastikan Firebase diimpor jika role b
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import Swal from "sweetalert2";
+import { HiHome } from "react-icons/hi";
+import { HiCalendar } from "react-icons/hi";
+import { HiUserAdd } from "react-icons/hi";
+import { HiIdentification } from "react-icons/hi";
+import { HiLogout } from "react-icons/hi";
 
 export default function Sidebar() {
     const navigate = useNavigate();
@@ -15,25 +20,26 @@ export default function Sidebar() {
 
     // Daftar menu Admin
     const MenuAdmin = [
-        { title: "Dasboard", path: "/dashboardAdmin" },
-        { title: "Reservasi Kegiatan", path: "/reservasi" },
-        { title: "Log Out", path: "/" },
+        { title: "Dasboard", path: "/dashboardAdmin", icon: <HiHome className="text-[25px]" /> },
+        { title: "Reservasi", path: "/reservasi", icon: <HiCalendar className="text-[25px]" /> },
+        { title: "Log Out", path: "/", icon: <HiLogout className="text-[25px]" /> },
     ];
 
     //Daftar menu super admin
     const manuSuperAdmin = [
-        { title: "Dashboard", path: "/dasboard" },
-        { title: "Reservasi Kegiatan", path: "/reservasi" },
-        { title: "Akses Akun", path: "/akses" },
-        { title: "Log Out", path: "/" },
+        { title: "Dashboard", path: "/dasboard", icon: <HiHome className="text-[25px]"/> },
+        { title: "Reservasi ", path: "/reservasi", icon: <HiCalendar className="text-[25px]" /> },
+        { title: "Akses Akun", path: "/akses", icon: <HiUserAdd className="text-[25px]" /> },
+        { title: "Detail Pengguna", path: "/detailPengguna", icon: <HiIdentification className="text-[25px]" /> },
+        { title: "Log Out", path: "/", icon: <HiLogout className="text-[25px]" /> },
     ]
 
 
     //Daftar menu users
     const manuUsers = [
-        { title: "Dashboard", path: "/dashboardUsers" },
-        { title: "Reservasi Kegiatan", path: "/reservasiUsers" },
-        { title: "Log Out", path: "/" },
+        { title: "Dashboard", path: "/dashboardUsers", icon: <HiHome className="text-[25px]" /> },
+        { title: "Reservasi", path: "/reservasiUsers", icon: <HiCalendar className="text-[25px]" /> },
+        { title: "Log Out", path: "/", icon: <HiLogout className="text-[25px]" /> },
     ]
 
 
@@ -106,9 +112,10 @@ export default function Sidebar() {
                                     <li
                                         key={index}
                                         onClick={menu.title === "Log Out" ? handleLogout : () => navigate(menu.path)}
-                                        className="cursor-pointer font-poppins text-sm font-medium text-warnaDasar flex items-center 
+                                        className="cursor-pointer font-poppins text-[12px] font-medium text-warnaDasar flex gap-2 items-center 
                                 lg:text-lg lg:hover:bg-warnaDasar lg:hover:text-white rounded-md p-2 transition-all duration-300"
                                     >
+                                        <span>{menu.icon}</span>
                                         {menu.title}
                                     </li>
                                 ));
@@ -117,9 +124,10 @@ export default function Sidebar() {
                                     <li
                                         key={index}
                                         onClick={menu.title === "Log Out" ? handleLogout : () => navigate(menu.path)}
-                                        className="cursor-pointer font-poppins text-sm font-medium text-warnaDasar flex items-center 
+                                        className="cursor-pointer font-poppins text-[12px] font-medium text-warnaDasar flex gap-2 items-center 
                                 lg:text-lg lg:hover:bg-warnaDasar lg:hover:text-white rounded-md p-2 transition-all duration-300"
                                     >
+                                        <span>{menu.icon}</span>
                                         {menu.title}
                                     </li>
                                 ));
@@ -128,9 +136,10 @@ export default function Sidebar() {
                                     <li
                                         key={index}
                                         onClick={menu.title === "Log Out" ? handleLogout : () => navigate(menu.path)}
-                                        className="cursor-pointer font-poppins text-sm font-medium text-warnaDasar flex items-center 
+                                        className="cursor-pointer font-poppins text-[12px] font-medium text-warnaDasar flex gap-2 items-center 
                                 lg:text-lg lg:hover:bg-warnaDasar lg:hover:text-white rounded-md p-2 transition-all duration-300"
                                     >
+                                        <span>{menu.icon}</span>
                                         {menu.title}
                                     </li>
                                 ));

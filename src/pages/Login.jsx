@@ -48,7 +48,7 @@ export default function Login() {
                 navigate('/dashboardAdmin');
                 Swal.fire({
                     title: 'Berhasil Login',
-                    text: 'Anda Login Sebagai Super Admin',
+                    text: 'Anda Login Sebagai Admin',
                     icon: "success",
                     showConfirmButton: false,
                     timer: 1800
@@ -57,7 +57,7 @@ export default function Login() {
                 navigate('/dashboardUsers');
                 Swal.fire({
                     title: 'Berhasil Login',
-                    text: 'Anda Login Sebagai Super Admin',
+                    text: 'Anda Login Sebagai User',
                     icon: "success",
                     showConfirmButton: false,
                     timer: 1800

@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 
 import Hapus from '../assets/delete.png'
 import Edit from '../assets/Edit.png'
+import { HiEye, HiOutlineTrash } from 'react-icons/hi';
 
 const Reservasi = () => {
   const [reservasiData, setReservasiData] = useState([]); // State untuk menyimpan data reservasi
@@ -385,7 +386,7 @@ const Reservasi = () => {
                   <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap text-left'>{reservasi.alamat}</td>
                   <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap text-left'>{reservasi.nomorHp}</td>
                   <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap text-left'>{reservasi.nameKegiatan}</td>
-                  <td className="px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap text-left">
+                  <td className="px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap text-center">
                     {reservasi.wisata?.namaWisata && reservasi.wisata?.tempatWisata
                       ? `${reservasi.wisata.namaWisata} - ${reservasi.wisata.tempatWisata.join(', ')}`
                       : ""}
@@ -395,12 +396,12 @@ const Reservasi = () => {
                   <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap text-left'>{reservasi.sales}</td>
                   <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap  text-left'>Rp. {reservasi.omzet}</td>
                   <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap  text-left'>{reservasi.selectedStatus}</td>
-                  <td className='flex flex-row lg:flex-row gap-4 items-left justify-left'>
-                    <button onClick={() => Navigate(`/detailData/${reservasi.id}`)}>
-                      <img className='w-[16px] sm:w-[20px]' src={Edit} alt="Edit" />
+                  <td className='flex flex-row lg:flex-row gap-4 items-center justify-center'>
+                    <button className='flex gap-2 bg-green-700 items-center text-white font-poppins py-1 px-2 rounded-lg' onClick={() => Navigate(`/detailData/${reservasi.id}`)}>
+                      <span className=''>{<HiEye />}</span>Detail
                     </button>
-                    <button onClick={() => handleDelete(reservasi.id)}>
-                      <img className='w-[24px] sm:w-[25px]' src={Hapus} alt="Hapus" />
+                    <button className='flex gap-2 bg-orange-500 items-center text-white font-poppins py-1 px-2 rounded-lg' onClick={() => handleDelete(reservasi.id)}>
+                      <span className=''>{<HiOutlineTrash />}</span>Hapus
                     </button>
                   </td>
                 </tr>

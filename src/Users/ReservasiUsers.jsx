@@ -10,6 +10,7 @@ import { Navigate, useNavigate, Link } from 'react-router-dom';
 
 
 import Edit from '../assets/Edit.png'
+import { HiEye } from 'react-icons/hi';
 
 const Reservasi = () => {
   const [reservasiData, setReservasiData] = useState([]); // State untuk menyimpan data reservasi
@@ -174,7 +175,7 @@ const Reservasi = () => {
           `Fiks: ${totalOmzetFiks}; Batal: ${totalOmzetBatal}`
         )
         .join("\n");
-        
+
 
     const encodeUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
     const link = document.createElement("a");
@@ -283,15 +284,16 @@ const Reservasi = () => {
                         onChange={(e) => setSelectedMonth(e.target.value)}
                         value={selectedMonth}
                         className="border border-warnaDasar h-10 bg-white text-warnaDasar p-2 rounded-lg w-40 lg:w-32 font-outfit font-medium
-                            focus:ring-warnaDasar focus:border-warnaDasar transition ease-in-out"
+  focus:ring-warnaDasar focus:border-warnaDasar transition ease-in-out"
                       >
                         <option value="">Pilih Bulan</option>
-                        {monthOption.map((mount) => (
-                          <option key={mount.value} value={mount.value}>
-                            {mount.label}
+                        {monthOption.map((month) => (
+                          <option key={month.value} value={month.value}>
+                            {month.label}
                           </option>
                         ))}
                       </select>
+
                     </div>
 
                     {/* Download Buttons */}
@@ -359,8 +361,8 @@ const Reservasi = () => {
                   <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap  text-left'>Rp. {reservasi.omzet}</td>
                   <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap  text-left'>{reservasi.selectedStatus}</td>
                   <td className='flex flex-row lg:flex-row gap-4 items-left justify-left'>
-                    <button onClick={() => Navigate(`/detailUsers/${reservasi.id}`)}>
-                      <img className='w-[16px] sm:w-[20px]' src={Edit} alt="Edit" />
+                    <button className='flex gap-2 bg-green-700 items-center text-white font-poppins py-1 px-2 rounded-lg' onClick={() => Navigate(`/detailUsers/${reservasi.id}`)}>
+                      <span className=''>{<HiEye />}</span>Detail
                     </button>
 
                   </td>

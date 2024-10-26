@@ -4,16 +4,13 @@ import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import DatePicker from 'react-datepicker';
 import { format, parseISO } from 'date-fns';
-import Button from '../common/Button';
 import Option from '../common/Option'
 import OptionsWisata from "../component/OptionsWisata"
 
 
-export default function Detail() {
+export default function DetailUsers() {
 
   const { id } = useParams(); // Mengambil ID dari URL
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   // State untuk form input
   const [startDate, setStartDate] = useState(null);
@@ -47,7 +44,6 @@ export default function Detail() {
 
         //Set nilai default berdasarkan data yang ditemukan
         // Set nilai default berdasarkan data yang ditemukan
-        setData(foundData);
         setStartDate(parseISO(foundData.startDate));
         setFinishDate(parseISO(foundData.finishDate));
         setStartDP(parseISO(foundData.startDP));
@@ -69,9 +65,7 @@ export default function Detail() {
         });
       } catch (error) {
         console.error('Error fetching data:', error)
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
 
     fetchData();
@@ -162,6 +156,7 @@ export default function Detail() {
 
 
 
+
             {/* Baris Kedua Form Tambah Data */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
               {/* Nomor HP */}
@@ -194,6 +189,7 @@ export default function Detail() {
                 />
               </div>
             </div>
+
 
 
             {/* Baris Ketiga Form Tambah Data */}
@@ -234,6 +230,7 @@ export default function Detail() {
                     }
                   />
                 </div>
+                </div>
               
             </div>
 
@@ -241,17 +238,18 @@ export default function Detail() {
             {/* Baris KeEmpat Form Tambah Data */}
             <div className='grid grid-cols-1 lg:grid-cols-3 gap-6 w-full'>
               
-              </div>
               <div className='flex flex-col'>
                 {/* Option Pilih tempat wisata */}
                 <div className='flex flex-col'>
                   {/* Option Pilih tempat wisata */}
-                  <label className="font-outfit font-medium">Wisata</label>
-                  <OptionsWisata
-                    selectedWisata={wisata}
-                    setSelectedWisata={setWisata}
-                    value={wisata}
-                    onChange={(e) => setWisata(e.target.value)}
+                  <label className="font-outfit font-medium">Tempat Wisata</label>
+                  <input
+                    className="w-full h-14 rounded-md px-3 font-outfit border border-1 border-black items-center"
+                    type="text"
+                    value={wisata.namaWisata}
+                    onChange={(e) =>
+                      setWisata((prev) => ({ ...prev, namaWisata: e.target.value }))
+                    }
                   />
                 </div>
               </div>

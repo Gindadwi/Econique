@@ -9,6 +9,7 @@ export default function Dashboard() {
     const [suratPenawaran, setSuratPenawaran] = useState(0);
     const [fiks, setFiks] = useState(0);
     const [reschedule, setReschedule] = useState(0);
+    const [Batal, setBatal] = useState(0)
 
     // Fungsi untuk mengambil data
     const fetchData = async () => {
@@ -20,6 +21,7 @@ export default function Dashboard() {
             let fiksCount = 0;
             let suratPenawaranCount = 0;
             let rescheduleCount = 0;
+            let Batal = 0;
 
             // Menghitung total omzet
             const omzetList = Object.values(data).map(item => parseFloat(item.omzet.replace(/\./g, '')) || 0);
@@ -34,6 +36,8 @@ export default function Dashboard() {
                     suratPenawaranCount++;
                 } else if (item.selectedStatus === "Reschedule") {
                     rescheduleCount++;
+                } else if (item.selectedStatus === "Batal") {
+                    Batal++;
                 }
             });
 
@@ -42,6 +46,7 @@ export default function Dashboard() {
             setSuratPenawaran(suratPenawaranCount);
             setFiks(fiksCount);
             setReschedule(rescheduleCount);
+            setBatal (Batal)
 
         } catch (error) {
             console.error("Error fetching data: ", error);

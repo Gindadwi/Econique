@@ -63,7 +63,7 @@ export default function Dashboard() {
         <div className="relative w-full max-w-[1080px] ">
             {/* Header */}
             <div className='bg-white w-screen lg:w-screen items-center justify-start flex p-4 h-[63px] lg:sticky lg:top-0 lg:z-10 hidden lg:block'>
-                <h1 className='font-outfit text-[18px] lg:text-2xl font-medium hidden lg:block'>Dashboard Admin</h1>
+                <h1 className='font-outfit text-[18px] lg:text-2xl font-medium hidden lg:block'>Dashboard users</h1>
             </div>
 
             <div className="grid grid-cols-2 gap-1 lg:grid-cols-4 justify-center items-center px-4 mt-3">
