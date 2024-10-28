@@ -87,21 +87,21 @@ const Akses = () => {
 
 
   return (
-    <div className='px-4 lg:px-0'>
+    <div className=' px-4 lg:px-0'>
       <div className='bg-white w-full items-center justify-start flex p-4 h-[63px] hidden lg:block'>
         <h1 className='font-outfit text-2xl font-medium'>Daftar Pengguna</h1>
       </div>
-
-      <form className='relative max-w-[1080px] mx-auto mt-8 flex flex-col gap-4' onSubmit={handleRegister}>
+      
+      <form className='relative max-w-[1080px] mx-auto mt-8 flex flex-col gap-4 p-6 bg-white rounded-lg' onSubmit={handleRegister}>
         <div className='lg:grid lg:grid-cols-2 lg:gap-4'>
-          <div className='grid grid-cols-1 gap-4'>
+          <div className='grid grid-cols-1 gap-4 mb-4 lg:mb-0 '>
             <div className='flex flex-col w-full'>
               <label className='font-medium font-outfit'>Nama Lengkap</label>
               <input
                 type="text"
                 name="namaLengkap"
                 value={formData.namaLengkap}
-                className='border border-black rounded-md p-2 lg:p-3 font-outfit'
+                className="w-full h-14 font-outfit border border-gray-300 shadow-sm px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder='Masukkan nama lengkap'
                 onChange={handleChange}
               />
@@ -115,7 +115,7 @@ const Akses = () => {
                 type="email"
                 name="email"
                 value={formData.email}
-                className='border border-black rounded-md p-2 lg:p-3 font-outfit'
+                className="w-full h-14 font-outfit border border-gray-300 shadow-sm px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder='Masukkan Email'
                 onChange={handleChange}
               />
@@ -124,14 +124,14 @@ const Akses = () => {
         </div>
 
         <div className='lg:grid lg:grid-cols-2 lg:gap-4'>
-          <div className='grid grid-cols-1 gap-4'>
+          <div className='grid grid-cols-1 gap-4 mb-4 lg:mb-0'>
             <div className='flex flex-col w-full'>
               <label className='font-medium font-outfit'>Nomor Telepon</label>
               <input
                 type="text"
                 name="noTelepon"
                 value={formData.noTelepon}
-                className='border border-black rounded-md p-2 lg:p-3 font-outfit'
+                className="w-full h-14 font-outfit border border-gray-300 shadow-sm px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder='Masukkan Nomor Telepon'
                 onChange={handleChange}
               />
@@ -145,7 +145,7 @@ const Akses = () => {
                 type="text"
                 name="alamat"
                 value={formData.alamat}
-                className='border border-black rounded-md p-2 lg:p-3 font-outfit'
+                className="w-full h-14 font-outfit border border-gray-300 shadow-sm px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder='Masukkan Alamat'
                 onChange={handleChange}
               />
@@ -160,7 +160,7 @@ const Akses = () => {
               type="password"
               name="password"
               value={formData.password}
-              className='border border-black rounded-md p-2 lg:p-3 font-outfit'
+              className="w-full h-14 font-outfit border border-gray-300 shadow-sm px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder='Masukkan Password'
               onChange={handleChange}
             />
@@ -173,7 +173,7 @@ const Akses = () => {
               value={formData.role}
               onChange={(e) => handleChange({ target: { name: 'role', value: e.target.value } })}
               options={Kategori}
-              className={`lg:text-[16px] h-[45px] lg:h-[51px] w-full`}
+              className="w-full h-14 font-outfit border border-gray-300 shadow-sm px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>

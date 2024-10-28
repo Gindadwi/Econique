@@ -26,7 +26,7 @@ function App() {
 
 
   return (
-    <div className='flex flex-col lg:flex-row h-screen overflow-hidden bg-DasarBg'>
+    <div className='flex flex-col lg:flex-row h-screen overflow-hidden bg-backgroundColor'>
       <Toaster /> 
 
       {/* NavMenu hanya muncul di mobile */}

@@ -11,7 +11,8 @@ module.exports = {
 
       colors: {
         warnaDasar: '#016236',
-        DasarBg: '#E8E8E8'
+        DasarBg: '#E8E8E8',
+        backgroundColor: '#E0E0E0' 
       }
     },
   },

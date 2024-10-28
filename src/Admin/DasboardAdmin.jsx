@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Cart from '../component/Cart';
+import { ImCheckmark, ImCalendar, ImCross } from "react-icons/im";
+
 
 export default function Dashboard() {
     const [totalOmzet, setTotalOmzet] = useState(0);
@@ -65,22 +67,38 @@ export default function Dashboard() {
                 <h1 className='font-outfit text-[18px] lg:text-2xl font-medium hidden lg:block'>Dashboard Admin</h1>
             </div>
             
-            <div className="grid grid-cols-2 gap-1 lg:grid-cols-4 justify-center items-center px-4 mt-3">
-                <div className="bg-white p-4 text-center rounded-lg">
-                    <h2 className="font-poppins font-medium text-[14px] lg:text-lg">Fiks</h2>
-                    <p className="text-[14px] lg:text-2xl font-bold">{fiks}</p>
+            <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 justify-center items-center px-4 mt-5">
+                {/* Card Fiks */}
+                <div className="bg-white flex flex-col items-center p-5 rounded-lg shadow-lg">
+                    <div className="flex items-center space-x-2 mb-2">
+                        <ImCheckmark className="text-green-500 text-2xl" />
+                        <h2 className="font-outfit text-gray-500 font-medium text-lg">Fiks</h2>
+                    </div>
+                    <p className="text-2xl font-bold text-gray-700">{fiks}</p>
                 </div>
-                <div className="bg-white p-4 text-center rounded-lg">
-                    <h2 className="font-poppins font-medium text-[14px] lg:text-lg">Reschedule</h2>
-                    <p className="text-[14px] lg:text-2xl font-bold">{reschedule}</p>
+
+                {/* Card Reschedule */}
+                <div className="bg-white flex flex-col items-center p-5 rounded-lg shadow-lg">
+                    <div className="flex items-center space-x-2 mb-2">
+                        <ImCalendar className="text-blue-500 text-2xl" />
+                        <h2 className="font-outfit text-gray-500 font-medium text-lg">Reschedule</h2>
+                    </div>
+                    <p className="text-2xl font-bold text-gray-700">{reschedule}</p>
                 </div>
-                <div className="bg-white p-4 text-center rounded-lg">
-                    <h2 className="font-poppins font-medium text-[14px] lg:text-lg">Batal</h2>
-                    <p className="text-[14px] lg:text-xl font-bold">{Batal}</p>
+
+                {/* Card Batal */}
+                <div className="bg-white flex flex-col items-center p-5 rounded-lg shadow-lg">
+                    <div className="flex items-center space-x-2 mb-2">
+                        <ImCross className="text-red-500 text-2xl" />
+                        <h2 className="font-outfit text-gray-500 font-medium text-lg">Batal</h2>
+                    </div>
+                    <p className="text-2xl font-bold text-gray-700">{Batal}</p>
                 </div>
-                <div className="bg-white p-4 text-center rounded-lg">
-                    <h2 className="font-poppins font-medium text-[14px] lg:text-lg">Total Omzet</h2>
-                    <p className="text-[14px] lg:text-xl font-bold">Rp. {totalOmzet.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</p>
+
+                {/* Card Total Omzet */}
+                <div className="bg-white flex flex-col items-center p-5 rounded-lg shadow-lg">
+                    <h2 className="font-outfit text-gray-500 font-medium text-lg mb-2">Total Omzet</h2>
+                    <p className="lg:text-xl text-md font-bold text-gray-700">Rp. {totalOmzet.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</p>
                 </div>
             </div>
 

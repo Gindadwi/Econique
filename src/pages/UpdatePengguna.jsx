@@ -94,100 +94,102 @@ const UpdateUserForm = () => {
 
 
   return (
-    <div className='relative overflow-y-auto h-screen'>
-      <div className='lg:bg-white lg:w-screen lg:items-center lg:justify-start lg:flex lg:p-4 lg:h-[63px] lg:sticky lg:top-0 lg:z-10'>
-        <h1 className='font-outfit lg:text-2xl lg:font-medium hidden lg:block'>Reservasi Kegiatan</h1>
-      </div>
-    <form onSubmit={handleSubmit} className=" mb-48 p-4 bg-white shadow-md m-4 rounded-md grid grid-cols-1 lg:grid lg:grid-cols-2 gap-5">
-      {/* Input Nama Lengkap */}
-      <div className="mb-4">
-        <label className="block text-sm font-poppins font-medium mb-1">Nama Lengkap</label>
-        <input
-          type="text"
-          name="namaLengkap"
-          value={formData.namaLengkap}
-          onChange={handleChange}
-            className="w-full h-14 px-3 font-outfit py-2 border shadow-md rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        />
+    <div className='relative overflow-y-auto h-screen '>
+      <div className='lg:bg-white lg:w-screen lg:items-center lg:justify-start lg:flex lg:p-4 lg:h-[63px] lg:sticky lg:top-0 lg:z-10 shadow-lg'>
+        <h1 className='font-outfit lg:text-2xl lg:font-semibold hidden lg:block text-gray-800'>Reservasi Kegiatan</h1>
       </div>
 
-      {/* Input Email */}
-      <div className="mb-4">
-        <label className="block text-sm font-poppins font-medium mb-1">Email</label>
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-            className="w-full h-14 px-3 py-2 shadow-md font-outfit border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        />
-      </div>
+      <form onSubmit={handleSubmit} className="mb-48 p-6 bg-white shadow-md m-4 rounded-lg grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Input Nama Lengkap */}
+        <div className="mb-2">
+          <label className="block text-sm font-poppins font-medium mb-1 text-gray-700">Nama Lengkap</label>
+          <input
+            type="text"
+            name="namaLengkap"
+            value={formData.namaLengkap}
+            onChange={handleChange}
+            className="w-full h-14 px-3 font-outfit py-2 border border-gray-300 shadow-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
 
-      {/* Input No Telepon */}
-      <div className="mb-4">
-        <label className="block text-sm font-poppins font-medium mb-1">No Telepon</label>
-        <input
-          type="text"
-          name="noTelepon"
-          value={formData.noTelepon}
-          onChange={handleChange}
-            className="w-full h-14 font-outfit shadow-md px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        />
-      </div>
+        {/* Input Email */}
+        <div className="mb-2">
+          <label className="block text-sm font-poppins font-medium mb-1 text-gray-700">Email</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            className="w-full h-14 px-3 py-2 border border-gray-300 shadow-sm font-outfit rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
 
-      {/* Input Alamat */}
-      <div className="mb-4">
-        <label className="block text-sm font-poppins font-medium mb-1">Alamat</label>
-        <input
-          type="text"
-          name="alamat"
-          value={formData.alamat}
-          onChange={handleChange}
-            className="w-full h-14 font-outfit shadow-md px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        />
-      </div>
+        {/* Input No Telepon */}
+        <div className="mb-2">
+          <label className="block text-sm font-poppins font-medium mb-1 text-gray-700">No Telepon</label>
+          <input
+            type="text"
+            name="noTelepon"
+            value={formData.noTelepon}
+            onChange={handleChange}
+            className="w-full h-14 font-outfit border border-gray-300 shadow-sm px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
 
-      {/* Select Role */}
-      <div className="mb-4">
-        <label className="block font-poppins text-sm font-medium mb-1">Role</label>
-        <select
-          name="role"
-          value={formData.role}
-          onChange={handleChange}
-            className="w-full h-14 font-outfi shadow-md px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        {/* Input Alamat */}
+        <div className="mb-2">
+          <label className="block text-sm font-poppins font-medium mb-1 text-gray-700">Alamat</label>
+          <input
+            type="text"
+            name="alamat"
+            value={formData.alamat}
+            onChange={handleChange}
+            className="w-full h-14 font-outfit border border-gray-300 shadow-sm px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+
+        {/* Select Role */}
+        <div className="mb-2">
+          <label className="block font-poppins text-sm font-medium mb-1 text-gray-700">Role</label>
+          <select
+            name="role"
+            value={formData.role}
+            onChange={handleChange}
+            className="w-full h-14 font-outfit border border-gray-300 shadow-sm px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="User">User</option>
+            <option value="Admin">Admin</option>
+            <option value="Super Admin">Super Admin</option>
+          </select>
+        </div>
+
+        {/* Input Password Baru */}
+        <div className="mb-2">
+          <label className="block font-poppins text-sm font-medium mb-1 text-gray-700">Password Baru</label>
+          <input
+            type="password"
+            name="password"
+            value={password}
+            onChange={handlePasswordChange}
+            className="w-full h-14 font-outfit border border-gray-300 shadow-sm px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Masukkan password baru (opsional)"
+          />
+        </div>
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          className="w-full lg:w-1/2 bg-green-800 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200 ease-in-out"
         >
-          <option value="User">User</option>
-          <option value="Admin">Admin</option>
-          <option value="Super Admin">Super Admin</option>
-        </select>
-      </div>
-
-      {/* Input Password Baru */}
-      <div className="mb-4">
-        <label className="block font-poppins text-sm font-medium mb-1">Password Baru</label>
-        <input
-          type="password"
-          name="password"
-          value={password}
-          onChange={handlePasswordChange}
-            className="w-full h-14 font-outfit shadow-md px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Masukkan password baru (opsional)"
-        />
-      </div>
-
-      {/* Submit Button */}
-      <button
-        type="submit"
-        className=" w-32 lg:w-[350px] bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
-      >
-        Update Data
-      </button>
-    </form>
+          Update Data
+        </button>
+      </form>
     </div>
+
   );
 };
 

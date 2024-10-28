@@ -48,8 +48,8 @@ const DetailPengguna = () => {
         }
 
         try {
-            await deleteDoc(doc(db, "users", id)); // Hapus dokumen dari Firestore
-            Swal.fire({
+            // Show confirmation dialog
+            const result = await Swal.fire({
                 title: 'Apakah Anda yakin?',
                 text: 'Data yang dihapus tidak dapat dikembalikan!',
                 icon: 'warning',
@@ -58,10 +58,22 @@ const DetailPengguna = () => {
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Ya, Hapus!',
                 cancelButtonText: 'Batal',
-            })
+            });
 
-            // Perbarui state users
-            setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
+            // If user confirms the deletion
+            if (result.isConfirmed) {
+                await deleteDoc(doc(db, "users", id)); // Hapus dokumen dari Firestore
+
+                // Perbarui state users
+                setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
+
+                // Show success message
+                Swal.fire({
+                    title: 'Terhapus!',
+                    text: 'Data telah berhasil dihapus.',
+                    icon: 'success',
+                });
+            }
         } catch (error) {
             console.error('Gagal menghapus data:', error);
             Swal.fire({
@@ -70,38 +82,39 @@ const DetailPengguna = () => {
                 icon: 'error',
             });
         }
+
     };
 
     return (
         <div className="relative w-full max-w-[1080px]">
             {/* Header */}
-            <div className='bg-white w-screen lg:w-screen items-center justify-start flex p-4 h-[63px] lg:sticky lg:top-0 lg:z-10 hidden lg:block'>
+            <div className='lg:bg-white lg:w-screen lg:items-center lg:justify-start lg:flex lg:p-4 lg:h-[63px] lg:sticky lg:top-0 lg:z-10 shadow-lg'>
                 <h1 className='font-outfit text-[18px] lg:text-2xl font-medium hidden lg:block'>Detail Pengguna</h1>
             </div>
 
-            <div className='container w-full mt-5 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 mx-auto flex flex-col lg:max-w-[1920px]'>
+            <div className='container w-full rounded-lg mt-5 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 mx-auto flex flex-col lg:max-w-[1920px]'>
                 {/* Membuat Tabel untuk detail kegiatan */}
                 <div className='relative my-5 overflow-x-auto overflow-y-auto max-h-[450px]'>
                     <table className='w-full text-sm overflow-x-auto relative lg:text-base table-auto'>
-                        <thead className='bg-white text-sm text-black font-poppins'>
+                        <thead className='bg-green-100 text-sm text-black font-poppins'>
                             <tr>
-                                <th className='px-5 py-2 whitespace-nowrap font-outfit font-semibold text-left'> Nama Lengkap</th>
-                                <th className='px-5 py-2 whitespace-nowrap font-outfit font-semibold text-left'> Email</th>
-                                <th className='px-5 py-2 whitespace-nowrap font-outfit font-semibold text-left'> Nomor Telepon</th>
-                                <th className='px-5 py-2 whitespace-nowrap font-outfit font-semibold text-left'> Alamat</th>
-                                <th className='px-5 py-2 whitespace-nowrap font-outfit font-semibold text-left'> Roles</th>
-                                <th className='px-5 py-2 whitespace-nowrap font-outfit font-semibold text-left'> Aksi</th>
+                                <th className='px-5 py-5 whitespace-nowrap font-outfit font-semibold text-left'> Nama Lengkap</th>
+                                <th className='px-5 py-5 whitespace-nowrap font-outfit font-semibold text-left'> Email</th>
+                                <th className='px-5 py-5 whitespace-nowrap font-outfit font-semibold text-left'> Nomor Telepon</th>
+                                <th className='px-5 py-5 whitespace-nowrap font-outfit font-semibold text-left'> Alamat</th>
+                                <th className='px-5 py-5 whitespace-nowrap font-outfit font-semibold text-left'> Roles</th>
+                                <th className='px-5 py-5 whitespace-nowrap font-outfit font-semibold text-left'> Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             {users.map((user, index) => (
-                                <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
+                                <tr key={index} className={index % 2 === 0 ? 'bg-green-100' : 'bg-white'}>
                                     <>
-                                        <th className='px-5 py-4 whitespace-nowrap font-outfit font-normal text-left'>{user.namaLengkap}</th>
-                                        <th className='px-5 py-2 whitespace-nowrap font-outfit font-normal text-left'>{user.email}</th>
-                                        <th className='px-5 py-2 whitespace-nowrap font-outfit font-normal text-left'>{user.noTelepon}</th>
-                                        <th className='px-5 py-2 whitespace-nowrap font-outfit font-normal text-left'>{user.alamat}</th>
-                                        <th className='px-5 py-2 whitespace-nowrap font-outfit font-normal text-left'>{user.role}</th>
+                                        <th className='px-5 py-5 whitespace-nowrap font-outfit font-normal text-left'>{user.namaLengkap}</th>
+                                        <th className='px-5 py-5 whitespace-nowrap font-outfit font-normal text-left'>{user.email}</th>
+                                        <th className='px-5 py-5 whitespace-nowrap font-outfit font-normal text-left'>{user.noTelepon}</th>
+                                        <th className='px-5 py-5 whitespace-nowrap font-outfit font-normal text-left'>{user.alamat}</th>
+                                        <th className='px-5 py-5 whitespace-nowrap font-outfit font-normal text-left'>{user.role}</th>
                                         <div className='flex flex-col px-5 gap-0'>
                                             <th className='flex gap-2'>
                                                 <button onClick={() => navigate(`/updatePengguna/${user.id}`)} className='bg-green-700 font-normal text-white w-24 p-1 rounded-lg flex gap-2 items-center'>

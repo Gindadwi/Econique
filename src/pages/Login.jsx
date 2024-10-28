@@ -70,54 +70,56 @@ export default function Login() {
     };
 
     return (
-        <div className='bg-white h-screen w-screen flex flex-col items-center justify-center'>
-            <div className='flex flex-row gap-3 w-[245px] items-center justify-center'>
-                <img className='w-14 lg:w-[100px]' src={LogoPerhutani} alt="" />
-                <img className='w-14 pt-2 lg:w-[100px]' src={Econique} alt="" />
+        <div className='bg-gradient-to-r from-green-400 to-blue-500 h-screen w-screen flex flex-col items-center justify-center'>
+            <div className='flex flex-row gap-4 w-[245px] items-center justify-center mb-5'>
+                <img className='w-14 lg:w-[80px]' src={LogoPerhutani} alt="Logo Perhutani" />
+                <img className='w-14 pt-2 lg:w-[80px]' src={Econique} alt="Logo Econique" />
             </div>
 
-            <div className='w-full max-w-[1080px] flex flex-col gap-5  items-center'>
-                <div className='flex flex-col gap-1 justify-center items-center'>
-                    <p className='text-lg font-poppins font-medium text-black'>Daily Checklist Event</p>
-                    <p className='text-lg font-poppins font-medium text-black'>Klaster Banyumas</p>
+            <div className='w-full max-w-[300px] lg:max-w-[400px] bg-white rounded-lg shadow-2xl p-8 lg:p-10 flex flex-col items-center gap-5'>
+                <div className='text-center'>
+                    <p className='text-xl lg:text-2xl font-poppins font-semibold text-gray-800'>Daily Checklist Event</p>
+                    <p className='text-lg lg:text-xl font-poppins text-gray-700'>Klaster Banyumas</p>
                 </div>
-                <form onSubmit={handleLogin} className='flex flex-col px-5 gap-3 items-center lg:max-w-[400px] w-full'>
+
+                <form onSubmit={handleLogin} className='flex flex-col gap-4 w-full'>
                     <div className='flex flex-col w-full'>
-                        <label className='text-black font-poppins text-[14px]'>Username</label>
+                        <label className='text-gray-700 font-poppins text-sm lg:text-base'>Username</label>
                         <input
                             type="text"
                             placeholder='Masukan Username'
                             value={namaLengkap}
                             onChange={(e) => setNamaLengkap(e.target.value)}
-                            className='w-full border border-black shadow-md rounded-lg px-2 py-2 lg:py-3'
+                            className='w-full border border-gray-300 rounded-lg px-4 py-3 lg:py-4 text-gray-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200'
                         />
                     </div>
 
-                    <div className='flex flex-col relative w-full'>
-                        <label className='text-black font-poppins text-[14px]'>Password</label>
+                    <div className='flex flex-col w-full relative'>
+                        <label className='text-gray-700 font-poppins text-sm lg:text-base'>Password</label>
                         <input
                             type={showPassword ? "text" : "password"}
                             placeholder='Masukan Password'
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className='w-full border border-black shadow-md rounded-lg px-2 py-2 lg:py-3'
+                            className='w-full border border-gray-300 rounded-lg px-4 py-3 lg:py-4 text-gray-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200'
                         />
                         <button
                             type='button'
-                            className='absolute right-4 top-[32px] lg:top-[38px]'
+                            className='absolute right-4 top-[34px] lg:top-[42px] text-gray-500 hover:text-gray-700'
                             onClick={() => setShowPassword(!showPassword)}
                         >
-                            <Icon icon={showPassword ? "mdi:eye-off-outline" : "mdi:eye-outline"} width={20} />
+                            <Icon icon={showPassword ? "mdi:eye-off-outline" : "mdi:eye-outline"} width={22} />
                         </button>
                     </div>
 
                     <Button
                         type="submit"
                         name="Login"
-                        className='text-[16px] w-full h-9'
+                        className='w-full bg-blue-500 hover:bg-blue-600 text-white rounded-lg py-2 lg:py-3 font-poppins font-medium transition duration-300 ease-in-out'
                     />
                 </form>
             </div>
         </div>
+
     );
 }

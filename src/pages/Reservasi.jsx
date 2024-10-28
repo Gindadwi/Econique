@@ -279,7 +279,7 @@ const Reservasi = () => {
 
   return (
     <div className=''>
-      <div className='lg:bg-white lg:w-screen lg:items-center lg:justify-start lg:flex lg:p-4 lg:h-[63px] lg:sticky lg:top-0 lg:z-10'>
+      <div className='lg:bg-white lg:w-screen lg:items-center lg:justify-start lg:flex lg:p-4 lg:h-[63px] lg:sticky lg:top-0 lg:z-10 shadow-lg'>
         <h1 className='font-outfit lg:text-2xl lg:font-medium hidden lg:block'>Reservasi Kegiatan</h1>
       </div>
 
