@@ -94,69 +94,71 @@ const UpdateUserForm = () => {
 
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md mx-auto p-4 bg-white shadow-md rounded">
-      <h2 className="text-xl font-bold mb-4">Update Data User</h2>
-
+    <div className='relative overflow-y-auto h-screen'>
+      <div className='lg:bg-white lg:w-screen lg:items-center lg:justify-start lg:flex lg:p-4 lg:h-[63px] lg:sticky lg:top-0 lg:z-10'>
+        <h1 className='font-outfit lg:text-2xl lg:font-medium hidden lg:block'>Reservasi Kegiatan</h1>
+      </div>
+    <form onSubmit={handleSubmit} className=" mb-48 p-4 bg-white shadow-md m-4 rounded-md grid grid-cols-1 lg:grid lg:grid-cols-2 gap-5">
       {/* Input Nama Lengkap */}
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Nama Lengkap</label>
+        <label className="block text-sm font-poppins font-medium mb-1">Nama Lengkap</label>
         <input
           type="text"
           name="namaLengkap"
           value={formData.namaLengkap}
           onChange={handleChange}
-          className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full h-14 px-3 font-outfit py-2 border shadow-md rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           required
         />
       </div>
 
       {/* Input Email */}
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Email</label>
+        <label className="block text-sm font-poppins font-medium mb-1">Email</label>
         <input
           type="email"
           name="email"
           value={formData.email}
           onChange={handleChange}
-          className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full h-14 px-3 py-2 shadow-md font-outfit border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           required
         />
       </div>
 
       {/* Input No Telepon */}
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">No Telepon</label>
+        <label className="block text-sm font-poppins font-medium mb-1">No Telepon</label>
         <input
           type="text"
           name="noTelepon"
           value={formData.noTelepon}
           onChange={handleChange}
-          className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full h-14 font-outfit shadow-md px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           required
         />
       </div>
 
       {/* Input Alamat */}
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Alamat</label>
+        <label className="block text-sm font-poppins font-medium mb-1">Alamat</label>
         <input
           type="text"
           name="alamat"
           value={formData.alamat}
           onChange={handleChange}
-          className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full h-14 font-outfit shadow-md px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           required
         />
       </div>
 
       {/* Select Role */}
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Role</label>
+        <label className="block font-poppins text-sm font-medium mb-1">Role</label>
         <select
           name="role"
           value={formData.role}
           onChange={handleChange}
-          className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full h-14 font-outfi shadow-md px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="User">User</option>
           <option value="Admin">Admin</option>
@@ -166,13 +168,13 @@ const UpdateUserForm = () => {
 
       {/* Input Password Baru */}
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Password Baru</label>
+        <label className="block font-poppins text-sm font-medium mb-1">Password Baru</label>
         <input
           type="password"
           name="password"
           value={password}
           onChange={handlePasswordChange}
-          className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full h-14 font-outfit shadow-md px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Masukkan password baru (opsional)"
         />
       </div>
@@ -180,11 +182,12 @@ const UpdateUserForm = () => {
       {/* Submit Button */}
       <button
         type="submit"
-        className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
+        className=" w-32 lg:w-[350px] bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
       >
         Update Data
       </button>
     </form>
+    </div>
   );
 };
 

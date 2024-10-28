@@ -71,15 +71,15 @@ export default function Login() {
 
     return (
         <div className='bg-white h-screen w-screen flex flex-col items-center justify-center'>
-            <div className='flex flex-row gap-3 w-[245px] items-center absolute top-1 start-5'>
+            <div className='flex flex-row gap-3 w-[245px] items-center justify-center'>
                 <img className='w-14 lg:w-[100px]' src={LogoPerhutani} alt="" />
                 <img className='w-14 pt-2 lg:w-[100px]' src={Econique} alt="" />
             </div>
 
-            <div className='w-full max-w-[1080px] flex flex-col gap-5 -mt-16 items-center'>
+            <div className='w-full max-w-[1080px] flex flex-col gap-5  items-center'>
                 <div className='flex flex-col gap-1 justify-center items-center'>
-                    <p className='text-2xl font-poppins font-semibold text-black'>Daily Checklist Event</p>
-                    <p className='text-2xl font-outfit font-semibold text-black'>Klaster Banyumas</p>
+                    <p className='text-lg font-poppins font-medium text-black'>Daily Checklist Event</p>
+                    <p className='text-lg font-poppins font-medium text-black'>Klaster Banyumas</p>
                 </div>
                 <form onSubmit={handleLogin} className='flex flex-col px-5 gap-3 items-center lg:max-w-[400px] w-full'>
                     <div className='flex flex-col w-full'>
