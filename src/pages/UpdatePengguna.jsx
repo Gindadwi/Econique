@@ -96,7 +96,7 @@ const UpdateUserForm = () => {
   return (
     <div className='relative overflow-y-auto h-screen '>
       <div className='lg:bg-white lg:w-screen lg:items-center lg:justify-start lg:flex lg:p-4 lg:h-[63px] lg:sticky lg:top-0 lg:z-10 shadow-lg'>
-        <h1 className='font-outfit lg:text-2xl lg:font-semibold hidden lg:block text-gray-800'>Reservasi Kegiatan</h1>
+        <h1 className='font-outfit lg:text-2xl lg:font-semibold hidden lg:block text-gray-800'>Update Pengguna</h1>
       </div>
 
       <form onSubmit={handleSubmit} className="mb-48 p-6 bg-white shadow-md m-4 rounded-lg grid grid-cols-1 lg:grid-cols-2 gap-6">

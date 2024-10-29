@@ -37,6 +37,16 @@ const Akses = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
 
+    // Validasi: Cek jika nama lengkap mengandung spasi dan password kurang dari 8 karakter
+    if (formData.namaLengkap.includes(' ')) {
+      toast.error("Nama lengkap tidak boleh mengandung spasi.");
+      return;
+    }
+    if (formData.password.length < 8) {
+      toast.error("Password harus minimal 8 karakter.");
+      return;
+    }
+
     // Save the current user (Super Admin) before creating a new account
     const currentUser = auth.currentUser;
 
