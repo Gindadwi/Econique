@@ -21,7 +21,7 @@ export default function Sidebar() {
     // Daftar menu Admin
     const MenuAdmin = [
         { title: "Dasboard", path: "/dashboardAdmin", icon: <HiHome className="text-[25px]" /> },
-        { title: "Reservasi", path: "/reservasi", icon: <HiCalendar className="text-[25px]" /> },
+        { title: "Reservasi", path: "/reservasiAdmin", icon: <HiCalendar className="text-[25px]" /> },
         { title: "Log Out", path: "/", icon: <HiLogout className="text-[25px]" /> },
     ];
 

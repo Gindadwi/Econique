@@ -16,6 +16,7 @@ import DetailUsers from './Users/DetailUsers'
 import ReservasiUsers from './Users/ReservasiUsers'
 import DetailPengguna from './pages/DetailPengguna'
 import UpdateUserForm from './pages/UpdatePengguna';
+import Reservasiadmin from './Admin/ReservasiAdmin';
 
 function App() {
   const location = useLocation();
@@ -58,6 +59,7 @@ function App() {
           <Route path="/dashboardAdmin" element={<DasboardAdmin />} />
           <Route path="/updatePengguna/:id" element={<UpdateUserForm />} />
           <Route path="/detailPengguna" element={<DetailPengguna />} />
+          <Route path="/reservasiAdmin" element={<Reservasiadmin />}/>        
         </Routes>      
       </div>
       
