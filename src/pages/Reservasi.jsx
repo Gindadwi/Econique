@@ -6,12 +6,9 @@ import IconDownload from '../assets/Download.png';
 import { toast } from 'react-hot-toast'; // Import toast untuk menampilkan notifikasi
 import jsPDF from 'jspdf'; // Import jsPDF untuk download PDF
 import 'jspdf-autotable'; // Import AutoTable untuk membuat tabel dalam PDF
-import { Navigate, useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
-
-import Hapus from '../assets/delete.png'
-import Edit from '../assets/Edit.png'
 import { HiEye, HiOutlineTrash } from 'react-icons/hi';
 
 const Reservasi = () => {
@@ -163,7 +160,7 @@ const Reservasi = () => {
     }, 0);
 
     const csvHeaders =
-      "Tanggal Mulai; Tanggal Selesai; Nama; Alamat; Nama Kegiatan; Tempat; Jumlah Orang; Sales; Status; Nominal Bayar; Total Omzet\n";
+      "Tanggal Mulai; Tanggal Selesai; Nama; Alamat; Nama Kegiatan; Tempat; Jumlah Orang; Sales; Status; Nominal Bayar\n";
 
     const csvContent =
       csvHeaders +
@@ -172,12 +169,11 @@ const Reservasi = () => {
           `${reservasi.startDate};${reservasi.finishDate};${reservasi.namaCustomer};${reservasi.alamat};${reservasi.nameKegiatan};${reservasi.wisata?.namaWisata && reservasi.wisata?.tempatWisata
             ? `${reservasi.wisata.namaWisata} - ${reservasi.wisata.tempatWisata.join(", ")}`
             : ""
-          };${reservasi.jumlahPeserta};${reservasi.sales};${reservasi.selectedStatus};${reservasi.omzet};` +
-          // Tambah kolom omzet 'Fiks' dan 'Batal'
-          `Fiks: ${totalOmzetFiks}; Batal: ${totalOmzetBatal}`
+          };${reservasi.jumlahPeserta};${reservasi.sales};${reservasi.selectedStatus};${reservasi.omzet}`
         )
-        .join("\n");
-        
+        .join("\n") + '\n' +
+      // Tambahkan baris untuk Total Omzet Fiks dan Batal di bawah data
+      `\nTotal Omzet Fiks: ;${totalOmzetFiks}\nTotal Omzet Batal: ;${totalOmzetBatal}`;
 
     const encodeUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
     const link = document.createElement("a");

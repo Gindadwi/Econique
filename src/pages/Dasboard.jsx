@@ -15,39 +15,49 @@ export default function Dashboard() {
     const [reschedule, setReschedule] = useState(0);
     const [Batal, setBatal] = useState(0);
     const [users, setUsers] = useState([]);
-
-    // Fungsi untuk mengambil data dari realtime database
+    const [availableYears, setAvailableYears] = useState([]);
+    const [selectedYear, setSelectedYear] = useState("");
+    const [selectedMonth, setSelectedMonth] = useState("");
+    
     const fetchData = async () => {
         try {
             const response = await axios.get('https://econique-perhutani-default-rtdb.firebaseio.com/ReservasiKegiatan.json?auth=oahZAHcmPhj9gDp0HdkDFaCuGRt2pPZrX05YsdIl');
             const data = response.data;
 
-            // Inisialisasi variabel penghitung
             let fiksCount = 0;
             let rescheduleCount = 0;
             let BatalCount = 0;
+            let filteredOmzet = 0;
+            const yearsSet = new Set(); // Untuk menyimpan tahun yang unik
 
-            // Menghitung total omzet
-            const omzetList = Object.values(data).map(item => parseFloat(item.omzet.replace(/\./g, '')) || 0);
-            const total = omzetList.reduce((acc, current) => acc + current, 0);
-            setTotalOmzet(total);
-
-            // Mengelompokkan data berdasarkan status
             Object.values(data).forEach(item => {
-                if (item.selectedStatus === "Fiks") {
-                    fiksCount++;
-                }
-                else if (item.selectedStatus === "Reschedule") {
-                    rescheduleCount++;
-                } else if (item.selectedStatus === "Batal") {
-                    BatalCount++;
+                const itemDate = new Date(item.startDate);
+                const itemYear = itemDate.getFullYear();
+                const itemMonth = (itemDate.getMonth() + 1).toString().padStart(2, '0'); // Memastikan bulan memiliki dua digit
+
+                // Tambahkan tahun ke dalam set
+                yearsSet.add(itemYear);
+
+                // Periksa apakah item cocok dengan tahun dan bulan yang dipilih
+                if ((!selectedYear || selectedYear === itemYear.toString()) &&
+                    (!selectedMonth || selectedMonth === itemMonth)) {
+                    // Jumlahkan omzet untuk item yang difilter
+                    filteredOmzet += parseFloat(item.omzet.replace(/\./g, '')) || 0;
+
+                    // Perbarui hitungan berdasarkan status
+                    if (item.selectedStatus === "Fiks") fiksCount++;
+                    else if (item.selectedStatus === "Reschedule") rescheduleCount++;
+                    else if (item.selectedStatus === "Batal") BatalCount++;
                 }
             });
 
-            // Mengupdate state dengan hasil perhitungan
+            setTotalOmzet(filteredOmzet);
             setFiks(fiksCount);
             setReschedule(rescheduleCount);
             setBatal(BatalCount);
+
+            // Ubah yearsSet menjadi array dan set status availableYears
+            setAvailableYears(Array.from(yearsSet).map(year => ({ value: year.toString(), label: year.toString() })));
 
         } catch (error) {
             console.error("Error fetching data: ", error);
@@ -57,12 +67,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         fetchData();
-    }, []);
-
-
-
-
-
+    }, [selectedYear, selectedMonth]); // Re-fetch data when selected year or month changes
 
 
     // Fetch data users dari Firestore
@@ -87,6 +92,22 @@ export default function Dashboard() {
         fetchDataUser();
     }, []);
 
+
+    //Membuat filter berdasarkan tahun dan bulan untuk total omzet
+    const FilterMounth = [
+        { value: '01', label: 'Januari' },
+        { value: '02', label: 'Februari' },
+        { value: '03', label: 'Maret' },
+        { value: '04', label: 'April' },
+        { value: '05', label: 'Mei' },
+        { value: '06', label: 'Juni' },
+        { value: '07', label: 'Juli' },
+        { value: '08', label: 'Agustus' },
+        { value: '09', label: 'September' },
+        { value: '10', label: 'Oktober' },
+        { value: '11', label: 'November' },
+        { value: '12', label: 'Desember' },
+    ];
 
 
 
@@ -127,9 +148,45 @@ export default function Dashboard() {
                 </div>
 
                 {/* Card Total Omzet */}
-                <div className="bg-white flex flex-col items-center p-5 rounded-lg shadow-lg">
-                    <h2 className="font-outfit text-gray-500 font-medium text-lg mb-2">Total Omzet</h2>
-                    <p className="lg:text-xl text-md font-bold text-gray-700">Rp. {totalOmzet.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</p>
+                <div className="bg-white flex flex-col items-center p-2 rounded-lg shadow-lg">
+                    <div className="flex gap-2 my-2 ">
+                        <div className="relative w-28">
+                            <select
+                                className="w-full border border-1 border-gray-300 rounded-md p-1 appearance-none focus:outline-none"
+                                value={selectedMonth}
+                                onChange={(e) => setSelectedMonth(e.target.value)}
+                            >
+                                <option value="" disabled>
+                                    Pilih Bulan
+                                </option>
+                                {FilterMounth.map((bulan) => (
+                                    <option key={bulan.value} value={bulan.value}>
+                                        {bulan.label}
+                                    </option>
+                                ))}
+                            </select>
+
+
+                        </div>
+                        <div className="relative w-28">
+                            <select
+                                className="w-full border border-1 border-gray-300 rounded-md p-1 appearance-none focus:outline-none"
+                                value={selectedYear}
+                                onChange={(e) => setSelectedYear(e.target.value)}
+                            >
+                                <option value="" disabled>
+                                    Pilih Tahun
+                                </option>
+                                {availableYears.map((year) => (
+                                    <option key={year.value} value={year.value}>
+                                        {year.label}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+
+                    <p className="lg:text-xl text-md font-bold text-gray-700 my-1">Rp. {totalOmzet.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</p>
                 </div>
             </div>
 

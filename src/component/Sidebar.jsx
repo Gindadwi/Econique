@@ -12,6 +12,7 @@ import { HiUserAdd } from "react-icons/hi";
 import { HiIdentification } from "react-icons/hi";
 import { HiLogout } from "react-icons/hi";
 
+
 export default function Sidebar() {
     const navigate = useNavigate();
     const location = useLocation(); // Mengambil rute aktif
@@ -69,13 +70,11 @@ export default function Sidebar() {
             }
         });
     }, [navigate]);
-
     // Navigasi otomatis ke dashboard saat berada di root "/"
 
 
 
     //Membuat fungsi LogOut 
-
     const handleLogout = async () => {
         try {
             await signOut(auth);// akan pergi ke halaman login
@@ -146,7 +145,6 @@ export default function Sidebar() {
                             }
                         })()}
                     </ul>
-
                 </div>
             </div>
         </>
