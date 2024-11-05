@@ -3,7 +3,8 @@ import Button from '../common/Button';
 import Option from '../common/Option';
 import { auth, db } from "../firebase"; // Firebase configuration and initialization
 import toast from 'react-hot-toast'; // Notification library
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { Icon } from '@iconify/react';
 import { setDoc, doc } from "firebase/firestore";
 const Akses = () => {
   // State untuk menyimpan data dari form
@@ -15,6 +16,8 @@ const Akses = () => {
     password: '',
     role: ''
   });
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   // Data Kategori untuk Role pengguna
   const Kategori = [
@@ -97,12 +100,12 @@ const Akses = () => {
 
 
   return (
-    <div className=' px-4 lg:px-0'>
+    <div className=' px-4 lg:px-0 h-screen relative overflow-y-auto'>
       <div className='bg-white w-full items-center justify-start flex p-4 h-[63px] hidden lg:block'>
         <h1 className='font-outfit text-2xl font-medium'>Daftar Pengguna</h1>
       </div>
       
-      <form className='relative max-w-[1080px] mx-auto mt-8 flex flex-col gap-4 p-6 bg-white rounded-lg' onSubmit={handleRegister}>
+      <form className='relative max-w-[1080px] mx-auto mt-8 mb-20 flex flex-col gap-4 p-6 bg-white rounded-lg' onSubmit={handleRegister}>
         <div className='lg:grid lg:grid-cols-2 lg:gap-4'>
           <div className='grid grid-cols-1 gap-4 mb-4 lg:mb-0 '>
             <div className='flex flex-col w-full'>
@@ -164,16 +167,23 @@ const Akses = () => {
         </div>
 
         <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
-          <div className='flex flex-col w-full'>
-            <label className='font-medium font-outfit'>Password</label>
+          <div className='flex flex-col w-full relative'>
+            <label className='text-gray-700 font-poppins text-sm lg:text-base'>Password</label>
             <input
-              type="password"
-              name="password"
+              type={showPassword ? "text" : "password"}
+              placeholder='Masukan Password'
+              name="password" 
               value={formData.password}
-              className="w-full h-14 font-outfit border border-gray-300 shadow-sm px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder='Masukkan Password'
               onChange={handleChange}
+              className='w-full border border-gray-300 rounded-lg px-4 py-3 lg:py-4 text-gray-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200'
             />
+            <button
+              type='button'
+              className='absolute right-4 top-[34px] lg:top-[42px] text-gray-500 hover:text-gray-700'
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              <Icon icon={showPassword ? "mdi:eye-off-outline" : "mdi:eye-outline"} width={22} />
+            </button>
           </div>
 
           <div className='flex flex-col w-full'>

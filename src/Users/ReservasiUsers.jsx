@@ -30,6 +30,8 @@ const Reservasi = () => {
       try {
         const response = await axios.get('https://econique-perhutani-default-rtdb.firebaseio.com/ReservasiKegiatan.json?auth=oahZAHcmPhj9gDp0HdkDFaCuGRt2pPZrX05YsdIl');
         const dataArray = Object.entries(response.data).map(([key, value]) => ({ id: key, ...value })); // Mengubah data menjadi array dengan ID
+        //Mengurutkan data berdasarkan start date
+        dataArray.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
         setReservasiData(dataArray);  // Menyimpan data ke state reservasiData
         setFilterData(dataArray);     // Menampilkan semua data di awal
       } catch (error) {
@@ -124,6 +126,7 @@ const Reservasi = () => {
     return dateObj.getFullYear();
   }))];
 
+  //membuat fungsi download csv
   const handleDownloadCSV = () => {
     const filteredData = reservasiData.filter((reservasi) => {
       const dateObj = new Date(reservasi.startDate);
@@ -161,7 +164,7 @@ const Reservasi = () => {
     }, 0);
 
     const csvHeaders =
-      "Tanggal Mulai; Tanggal Selesai; Nama; Alamat; Nama Kegiatan; Tempat; Jumlah Orang; Sales; Status; Nominal Bayar; Total Omzet\n";
+      "Tanggal Mulai; Tanggal Selesai; Nama; Alamat; Nama Kegiatan; Tempat; Jumlah Orang; Sales; Status; Nominal Bayar\n";
 
     const csvContent =
       csvHeaders +
@@ -170,12 +173,11 @@ const Reservasi = () => {
           `${reservasi.startDate};${reservasi.finishDate};${reservasi.namaCustomer};${reservasi.alamat};${reservasi.nameKegiatan};${reservasi.wisata?.namaWisata && reservasi.wisata?.tempatWisata
             ? `${reservasi.wisata.namaWisata} - ${reservasi.wisata.tempatWisata.join(", ")}`
             : ""
-          };${reservasi.jumlahPeserta};${reservasi.sales};${reservasi.selectedStatus};${reservasi.omzet};` +
-          // Tambah kolom omzet 'Fiks' dan 'Batal'
-          `Fiks: ${totalOmzetFiks}; Batal: ${totalOmzetBatal}`
+          };${reservasi.jumlahPeserta};${reservasi.sales};${reservasi.selectedStatus};${reservasi.omzet}`
         )
-        .join("\n");
-
+        .join("\n") + '\n' +
+      // Tambahkan baris untuk Total Omzet Fiks dan Batal di bawah data
+      `\nTotal Omzet Fiks: ;${totalOmzetFiks}\nTotal Omzet Batal: ;${totalOmzetBatal}`;
 
     const encodeUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
     const link = document.createElement("a");
@@ -189,6 +191,7 @@ const Reservasi = () => {
   };
 
 
+  //fungsi download pdf
   const handleDownloadPDF = () => {
     const filteredData = reservasiData.filter((reservasi) => {
       const dateObj = new Date(reservasi.startDate);
@@ -200,24 +203,69 @@ const Reservasi = () => {
       return;
     }
 
-    const doc = new jsPDF();
+    const doc = new jsPDF({ orientation: 'landscape' }); // Mengatur orientasi halaman menjadi landscape
+    doc.setFontSize(10);
     doc.autoTable({
-      head: [['Tanggal Mulai', 'Tanggal Selesai', 'Nama', 'Alamat', 'Nama Kegiatan', 'Tempat', 'Jumlah Orang', 'Sales', 'Status', 'Nominal Bayar']],
+      head: [
+        [
+          'Tanggal Mulai',
+          'Tanggal Selesai',
+          'Nama',
+          'Alamat',
+          'Nama Kegiatan',
+          'Tempat',
+          'Jumlah Orang',
+          'Sales',
+          'Status',
+          'Nominal Bayar'
+        ]
+      ],
       body: filteredData.map(reservasi => [
-        reservasi.startDate,
-        reservasi.finishDate,
+        new Date(reservasi.startDate).toLocaleDateString('id-ID'), // Format tanggal
+        new Date(reservasi.finishDate).toLocaleDateString('id-ID'),
         reservasi.namaCustomer,
         reservasi.alamat,
         reservasi.nameKegiatan,
-        reservasi.wisata?.namaWisata && reservasi.wisata?.tempatWisata ? `${reservasi.wisata.namaWisata} - ${reservasi.wisata.tempatWisata.join(", ")}` : "",
+        reservasi.wisata?.namaWisata && reservasi.wisata?.tempatWisata
+          ? `${reservasi.wisata.namaWisata} - ${reservasi.wisata.tempatWisata.join(", ")}`
+          : "",
         reservasi.jumlahPeserta,
         reservasi.sales,
         reservasi.selectedStatus,
-        reservasi.Omzet,
-      ])
+        `Rp ${reservasi.omzet}`
+      ]),
+      styles: {
+        overflow: 'linebreak',
+        cellPadding: 3
+      },
+      headStyles: {
+        fillColor: [52, 73, 94],
+        textColor: [255, 255, 255],
+        fontSize: 11,
+        fontStyle: 'bold'
+      },
+      bodyStyles: {
+        fontSize: 10
+      },
+      // Menggunakan autoWidth untuk penyesuaian kolom otomatis
+      columnStyles: {
+        0: { cellWidth: 'auto' },
+        1: { cellWidth: 'auto' },
+        2: { cellWidth: 'auto' },
+        3: { cellWidth: 'auto' },
+        4: { cellWidth: 'auto' },
+        5: { cellWidth: 'auto' },
+        6: { cellWidth: 'auto' },
+        7: { cellWidth: 'auto' },
+        8: { cellWidth: 'auto' },
+        9: { cellWidth: 'auto' }
+      }
     });
+
     doc.save(`reservasi_data_${selectedYear}_${selectedMonth}.pdf`);
   };
+
+
 
   //Akhir kode 
 

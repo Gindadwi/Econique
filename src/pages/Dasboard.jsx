@@ -113,7 +113,7 @@ export default function Dashboard() {
 
 
     return (
-        <div className="relative w-full max-w-[1080px] overflow-y-auto h-screen ">
+        <div className="relative w-full overflow-y-auto h-screen ">
             {/* Header */}
             <div className='lg:bg-white lg:w-screen lg:items-center lg:justify-start lg:flex lg:p-4 lg:h-[63px] lg:sticky lg:top-0 lg:z-10 shadow-lg'>
                 <h1 className='font-outfit text-[18px] lg:text-2xl font-medium hidden lg:block'>Dashboard </h1>
@@ -146,18 +146,17 @@ export default function Dashboard() {
                     </div>
                     <p className="text-2xl font-bold text-gray-700">{Batal}</p>
                 </div>
-
                 {/* Card Total Omzet */}
                 <div className="bg-white flex flex-col items-center p-2 rounded-lg shadow-lg">
-                    <div className="flex gap-2 my-2 ">
-                        <div className="relative w-28">
+                    <div className="flex gap-2 my-2">
+                        <div className="relative w-14 lg:w-28">
                             <select
-                                className="w-full border border-1 border-gray-300 rounded-md p-1 appearance-none focus:outline-none"
+                                className="w-full border border-gray-300 rounded-lg p-1 shadow-md text-gray-700 appearance-none bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 value={selectedMonth}
                                 onChange={(e) => setSelectedMonth(e.target.value)}
                             >
                                 <option value="" disabled>
-                                    Pilih Bulan
+                                    Bulan
                                 </option>
                                 {FilterMounth.map((bulan) => (
                                     <option key={bulan.value} value={bulan.value}>
@@ -165,17 +164,15 @@ export default function Dashboard() {
                                     </option>
                                 ))}
                             </select>
-
-
                         </div>
-                        <div className="relative w-28">
+                        <div className="relative w-14 lg:w-28 ">
                             <select
-                                className="w-full border border-1 border-gray-300 rounded-md p-1 appearance-none focus:outline-none"
+                                className="w-full border border-gray-300 rounded-lg p-1 shadow-md text-gray-700 appearance-none bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 value={selectedYear}
                                 onChange={(e) => setSelectedYear(e.target.value)}
                             >
-                                <option value="" disabled>
-                                    Pilih Tahun
+                                <option value="" disabled className="font-poppins">
+                                    Tahun
                                 </option>
                                 {availableYears.map((year) => (
                                     <option key={year.value} value={year.value}>
@@ -186,9 +183,12 @@ export default function Dashboard() {
                         </div>
                     </div>
 
-                    <p className="lg:text-xl text-md font-bold text-gray-700 my-1">Rp. {totalOmzet.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</p>
+                    <p className="lg:text-xl text-md font-bold text-gray-700 my-1">
+                        Rp. {totalOmzet.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+                    </p>
                 </div>
             </div>
+
 
             <div className="mt-3 flex flex-col lg:grid  lg:grid-cols-2 gap-2 px-4 lg:px-0 mb-20 lg:mb-5">
                 <Cart />

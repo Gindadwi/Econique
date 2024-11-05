@@ -35,13 +35,13 @@ const TambahData = () => {
 
   // Membuat Option Untuk Kolom Pilih Kategori
   const handleSelectChange = (e) => {
-    setSelectedOption(e.target.value); 
+    setSelectedOption(e.target.value);
   };
   const option = [
-    {value: "Family", label: "Family"},
-    {value: "Instansi", label: "Instansi"},
-    { value: "Corporate", label: "Corporate"},
-    { value: "Komunitas", label: "Komunitas"},
+    { value: "Family", label: "Family" },
+    { value: "Instansi", label: "Instansi" },
+    { value: "Corporate", label: "Corporate" },
+    { value: "Komunitas", label: "Komunitas" },
   ];
   // Akhir Kode Pilih Kategori
 
@@ -51,21 +51,21 @@ const TambahData = () => {
   }
 
   const paketReguler = [
-    {value: "Paket", label: "Paket"},
-    {value: "Reguler", label: "Reguler"},
+    { value: "Paket", label: "Paket" },
+    { value: "Reguler", label: "Reguler" },
   ]
 
 
   // Membuat Option Untuk Kolom Status
-  const handleStatus = (e) =>{
+  const handleStatus = (e) => {
     setSelectedStatus(e.target.value)
   }
   const status = [
-    {value:"Informasi Awal", label:"Informasi Awal"},
-    {value:"Surat Penawaran", label:"Surat Penawaran"},
-    {value:"Fiks", label:"Fiks"},
-    {value: "Reschedule", label:"Reschedule"},
-    {value: "Batal", label:"Batal"},
+    { value: "Informasi Awal", label: "Informasi Awal" },
+    { value: "Surat Penawaran", label: "Surat Penawaran" },
+    { value: "Fiks", label: "Fiks" },
+    { value: "Reschedule", label: "Reschedule" },
+    { value: "Batal", label: "Batal" },
   ]
   // Kode akhir pilih starus
 
@@ -82,39 +82,40 @@ const TambahData = () => {
 
 
   // Membuat fungsi untuk mengambil data reservasi yang tersimpan didata base
-  
+
   const fetchReservasi = async () => {
     try {
       const response = await axios.get('https://econique-perhutani-default-rtdb.firebaseio.com/ReservasiKegiatan.json?auth=oahZAHcmPhj9gDp0HdkDFaCuGRt2pPZrX05YsdIl')
       const data = response.data;
       const reservasiArray = [];
       // Mengubah objet array dan menyimpan ID pembaruan
-      for (const key in data){
+      for (const key in data) {
         reservasiArray.push({ ...data[key], id: key });
       }
       // Menyimpan data reservasi ke state
-      setReservation(reservasiArray); 
+      setReservation(reservasiArray);
     } catch (error) {
       console.error("Error fetching reservations: ", error);
       toast.error("Gagal memuat data reservasi!"); // Menampilkan pesan kesalahan
     }
   }
-  
+
   // Mengambil fungsi untuk mengambil data reservasi
   useEffect(() => {
     fetchReservasi();
   }, []);
 
+
+  //Fungsi Untuk Manyimpan Data
   const handleSumbitForm = async (e) => {
     e.preventDefault();
 
     // Validasi sederhana
     if (
       !startDate || !finishDate || !namaCustomer || !nomorHp ||
-      !alamat || !jumlahPeserta || !sales || !selectedStatus ||
-      !nameKegiatan || !instansiKeluarga
+      !alamat || !jumlahPeserta || !sales || !nameKegiatan 
     ) {
-      toast.error("Semua field yang diperlukan harus diisi!");
+      toast.error("field bertanda * wajib diisi!");
       return;
     }
 
@@ -126,6 +127,11 @@ const TambahData = () => {
     const duplicateFound = reservation.some(reservation => {
       const tempatTerdaftar = reservation.wisata.tempatWisata; // Tempat yang sudah dipesan
       const tempatDipilih = wisata.tempat.map(t => t.label); // Tempat yang dipilih user
+
+      // Abaikan validasi jika status reservasi adalah "Batal"
+      if (reservation.selectedStatus === "Batal") {
+        return false;
+      }
 
       // Cek jika ada tempat yang sama di tanggal yang sama
       return (
@@ -147,6 +153,11 @@ const TambahData = () => {
     const overlappingDate = reservation.some(reservation => {
       const existingStart = reservation.startDate;
       const existingFinish = reservation.finishDate;
+
+      // Abaikan validasi jika status reservasi adalah "Batal"
+      if (reservation.selectedStatus === "Batal") {
+        return false;
+      }
 
       return (
         isDateRangeOverlapping(existingStart, existingFinish, formattedStartDate, formattedFinishDate) &&
@@ -231,7 +242,10 @@ const TambahData = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
               {/* Tanggal Mulai */}
               <div className='flex flex-col'>
-                <label className="font-outfit font-medium">Tanggal Mulai</label>
+                <div className="">
+                  <label className="font-outfit font-medium">Tanggal Mulai</label>
+                  <label className="font-outfit font-light text-[20px] text-red-700">*</label>
+                </div>
                 <DatePicker
                   selected={startDate}
                   onChange={(date) => setStartDate(date)}
@@ -243,7 +257,10 @@ const TambahData = () => {
 
               {/* Tanggal Selesai */}
               <div className='flex flex-col'>
-                <label className="font-outfit font-medium">Tanggal Selesai</label>
+                <div className="">
+                  <label className="font-outfit font-medium">Tanggal Selesai</label>
+                  <label className="font-outfit font-light text-[20px] text-red-700">*</label>
+                </div>
                 <DatePicker
                   selected={finishDate}
                   onChange={(date) => setFinishDate(date)}
@@ -255,7 +272,10 @@ const TambahData = () => {
 
               {/* Nama Customer */}
               <div className='flex flex-col'>
-                <label className="font-outfit font-medium">Nama Customer</label>
+                <div className="">
+                  <label className="font-outfit font-medium">Nama Customer</label>
+                  <label className="font-outfit font-light text-[20px] text-red-700">*</label>
+                </div>
                 <input type="text"
                   value={namaCustomer}
                   onChange={(e) => setNamaCustomer(e.target.value)}
@@ -269,7 +289,10 @@ const TambahData = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
               {/* Nomor HP */}
               <div className='flex flex-col'>
-                <label className="font-outfit font-medium">Nomor Telp</label>
+                <div>
+                  <label className="font-outfit font-medium">Nomor Telp</label>
+                  <label className="font-outfit font-light text-[20px] text-red-700">*</label>
+                </div>
                 <input type="tel"
                   value={nomorHp}
                   onChange={(e) => setNomorHp(e.target.value)}
@@ -279,7 +302,10 @@ const TambahData = () => {
 
               {/* Alamat */}
               <div className='flex flex-col'>
-                <label className="font-outfit font-medium">Alamat</label>
+                <div>
+                  <label className="font-outfit font-medium">Alamat</label>
+                  <label className="font-outfit font-light text-[20px] text-red-700">*</label>
+                </div>
                 <input type="text"
                   value={alamat}
                   onChange={(e) => setAlamat(e.target.value)}
@@ -288,7 +314,10 @@ const TambahData = () => {
               </div>
               {/* Pilihan Kategori */}
               <div className='flex flex-col'>
-                <label className="font-outfit font-medium">Kelompok</label>
+                <div>
+                  <label className="font-outfit font-medium">Kelompok</label>
+                  <label className="font-outfit font-light text-[20px] text-red-700"></label>
+                </div>
                 <Option
                   name={"Pilih Jenis Kelompok"}
                   value={selectedOption}
@@ -303,7 +332,10 @@ const TambahData = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
               {/* Nama Instansi atau Keluarga */}
               <div className='flex flex-col'>
-                <label className="font-outfit font-medium">Daftar Group</label>
+                <div>
+                  <label className="font-outfit font-medium">Daftar Group</label>
+                  <label className="font-outfit font-light text-[20px] text-red-700"></label>
+                </div>
                 <input type="text"
                   value={instansiKeluarga}
                   onChange={(e) => setInstansiKeluarga(e.target.value)}
@@ -313,7 +345,10 @@ const TambahData = () => {
 
               {/* Nama Kegiatan */}
               <div className='flex flex-col'>
-                <label className="font-outfit font-medium">Kegiatan</label>
+                <div>
+                  <label className="font-outfit font-medium">Kegiatan</label>
+                  <label className="font-outfit font-light text-[20px] text-red-700">*</label>
+                </div>
                 <input type="text"
                   value={nameKegiatan}
                   onChange={(e) => setNameKegiatan(e.target.value)}
@@ -323,7 +358,10 @@ const TambahData = () => {
 
               <div className='flex flex-col'>
                 {/* Option Pilih tempat wisata */}
-                <label className="font-outfit font-medium">Tempat Wisata</label>
+                <div>
+                  <label className="font-outfit font-medium">Tempat Wisata</label>
+                  <label className="font-outfit font-light text-[20px] text-red-700"></label>
+                </div>
                 <OptionsWisata
                   selectedWisata={wisata}
                   setSelectedWisata={setWisata}
@@ -338,8 +376,11 @@ const TambahData = () => {
             <div className='grid grid-cols-1 lg:grid-cols-3 gap-6 w-full'>
 
               <div className='flex flex-col'>
-                {/* Status Fix atau reschedule */}
-                <label className="font-outfit font-medium">Reguler/paket</label>
+                <div>
+                  {/* Status Fix atau reschedule */}
+                  <label className="font-outfit font-medium">Reguler/paket</label>
+                  <label className="font-outfit font-light text-[20px] text-red-700"></label>
+                </div>
                 <Option
                   name={"Pilih Paket"}
                   value={pilihPaket}
@@ -350,7 +391,10 @@ const TambahData = () => {
 
               {/* Jumlah Peserta */}
               <div className='flex flex-col'>
-                <label className="font-outfit font-medium">Jumlah Peserta</label>
+                <div>
+                  <label className="font-outfit font-medium">Jumlah Peserta</label>
+                  <label className="font-outfit font-light text-[20px] text-red-700">*</label>
+                </div>
                 <input type="text"
                   value={jumlahPeserta}
                   onChange={(e) => setJumlahPeserta(e.target.value)}
@@ -359,7 +403,10 @@ const TambahData = () => {
               </div>
               <div className='flex flex-col'>
                 {/* Nama Sales */}
-                <label className="font-outfit font-medium">Sales</label>
+                <div>
+                  <label className="font-outfit font-medium">Sales</label>
+                  <label className="font-outfit font-light text-[20px] text-red-700">*</label>
+                </div>
                 <input type="text"
                   value={sales}
                   onChange={(e) => setSales(e.target.value)}
@@ -372,7 +419,10 @@ const TambahData = () => {
             <div className='grid grid-cols-1 lg:grid-cols-3 gap-6 w-full'>
               <div className='flex flex-col'>
                 {/* Status Fix atau reschedule */}
-                <label className="font-outfit font-medium">Status</label>
+                <div>
+                  <label className="font-outfit font-medium">Status</label>
+                  <label className="font-outfit font-light text-[20px] text-red-700"></label>
+                </div>
                 <Option
                   name={"Pilih Status Pesanan"}
                   value={selectedStatus}
@@ -382,7 +432,10 @@ const TambahData = () => {
               </div>
               <div className='flex flex-col'>
                 {/* Jumlah DP */}
-                <label className="font-outfit font-medium">Total DP</label>
+                <div>
+                  <label className="font-outfit font-medium">Total DP</label>
+                  <label className="font-outfit font-light text-[20px] text-red-700"></label>
+                </div>
                 <input type="text"
                   value={jumlahDp}
                   onChange={(e) => handleNumberChange(e, setJumlahDp)}
@@ -391,7 +444,10 @@ const TambahData = () => {
               </div>
               {/* Tanggal DP */}
               <div className="flex flex-col">
-                <label className="font-outfit font-medium">Tanggal Dp</label>
+                <div>
+                  <label className="font-outfit font-medium">Tanggal Dp</label>
+                  <label className="font-outfit font-light text-[20px] text-red-700"></label>
+                </div>
                 <DatePicker
                   selected={startDP}
                   onChange={(date) => setStartDP(date)}
@@ -406,7 +462,10 @@ const TambahData = () => {
             <div className='grid grid-cols-1 lg:grid w-full lg:grid-cols-3 gap-5 '>
               <div className='flex flex-col'>
                 {/* Omzet Keegiatan */}
-                <label className="font-outfit font-medium">Omzet</label>
+                <div>
+                  <label className="font-outfit font-medium">Omzet</label>
+                  <label className="font-outfit font-light text-[20px] text-red-700"></label>
+                </div>
                 <input type="text"
                   value={omzet}
                   onChange={(e) => handleNumberChange(e, setOmzet)}
@@ -422,7 +481,7 @@ const TambahData = () => {
           </form>
         </div>
 
-        </div>
+      </div>
     </>
   );
 }

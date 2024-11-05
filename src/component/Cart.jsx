@@ -123,8 +123,13 @@ const BarChartMobile = () => {
                                 },
                             },
                             scales: {
-                                y: { beginAtZero: true },
-                            },
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        display: false, // Menyembunyikan angka di sumbu y
+                                    },
+                                },
+                            }
                         }}
                     />
                 </div>
