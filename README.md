@@ -21,16 +21,20 @@ npm install -D tailwindcss postcss autoprefixer
 - inisialisasi Tailwind
 npx tailwindcss init -p
 
-## cara install react hot toast (Digunakan untuk menampilkan notifikasi toast.)
+## cara install react hot toast 
+###(Digunakan untuk menampilkan notifikasi toast.)
 npm install react-icons
 
-## cara install react icons (Digunakan untuk menambahkan ikon ke dalam komponen React.)
+## cara install react icons 
+###(Digunakan untuk menambahkan ikon ke dalam komponen React.)
 npm install react-icons
 
-## cara install Sweetalert (Digunakan untuk menampilkan dialog peringatan atau konfirmasi.)
+## cara install Sweetalert 
+###(Digunakan untuk menampilkan dialog peringatan atau konfirmasi.)
 npm install sweetalert2 react-sweetalert2
 
-## cara install Date Picker (untuk menampilkan tanggal yang di pilih)
+## cara install Date Picker 
+###(untuk menampilkan tanggal yang di pilih)
 npm install react-datepicker
 
 ## date fns digunakan untuk memanipulasi tanggal
@@ -41,4 +45,4 @@ npm install date-fns
 ### 1. Clone Repository
 Clone repository proyek ini ke dalam direktori lokal Anda:
 ```bash
-git clone <URL-repo-anda>
+git clone <git@github.com:Gindadwi/Econique.git>
