@@ -9,40 +9,36 @@ Pastikan Anda telah menginstal **Node.js** dan **npm** (Node Package Manager) di
 - Gunkana ini untuk mengisntall semua dependensi semua proyek
 npm install
 
-## cara install firebase
+### 1. cara install firebase
 npm install firebase
 
-## cara install Axios
+## 2. cara install Axios
 npm install axios
 
-## cara install Tailwind css
+## 3. cara install Tailwind css
 npm install -D tailwindcss postcss autoprefixer
 
 - inisialisasi Tailwind
 npx tailwindcss init -p
 
-## cara install react hot toast 
-###(Digunakan untuk menampilkan notifikasi toast.)
+## 4. cara install react hot toast (Digunakan untuk menampilkan notifikasi toast.)
 npm install react-icons
 
-## cara install react icons 
-###(Digunakan untuk menambahkan ikon ke dalam komponen React.)
+## 5. cara install react icons (Digunakan untuk menambahkan ikon ke dalam komponen React.)
 npm install react-icons
 
-## cara install Sweetalert 
-###(Digunakan untuk menampilkan dialog peringatan atau konfirmasi.)
+## 6. cara install Sweetalert (Digunakan untuk menampilkan dialog peringatan atau konfirmasi.)
 npm install sweetalert2 react-sweetalert2
 
-## cara install Date Picker 
-###(untuk menampilkan tanggal yang di pilih)
+## 7. cara install Date Picker (untuk menampilkan tanggal yang di pilih)
 npm install react-datepicker
 
-## date fns digunakan untuk memanipulasi tanggal
+## 8. date fns digunakan untuk memanipulasi tanggal
 npm install date-fns
 
 
 
-### 1. Clone Repository
+### 9. Clone Repository
 Clone repository proyek ini ke dalam direktori lokal Anda:
 ```bash
 git clone <git@github.com:Gindadwi/Econique.git>
