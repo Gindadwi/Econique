@@ -9,6 +9,7 @@ Pastikan Anda telah menginstal **Node.js** dan **npm** (Node Package Manager) di
 
 ## Instalasi Proyek
 - Gunkana ini untuk mengisntall semua dependensi semua proyek
+  ```bash
 npm install
 
 #### 1. cara install firebase
@@ -42,5 +43,5 @@ npx tailwindcss init -p
 
 ###  Clone Repository
 Clone repository proyek ini ke dalam direktori lokal Anda:
-```bash
+
 git clone <git@github.com:Gindadwi/Econique.git>
