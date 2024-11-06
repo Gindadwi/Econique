@@ -1,8 +1,7 @@
-import { collection, getDocs, doc, updateDoc, getDoc } from 'firebase/firestore';
+import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
-import { formatDistanceToNow } from 'date-fns';
 import toast from 'react-hot-toast';
 
 const UpdateUserForm = () => {

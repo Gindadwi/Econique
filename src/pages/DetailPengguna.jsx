@@ -1,14 +1,13 @@
 import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { formatDistanceToNow } from "date-fns";
 import { db } from '../firebase';
 import { HiEye } from "react-icons/hi";
 import { HiOutlineTrash } from "react-icons/hi";
 import Swal from 'sweetalert2';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const DetailPengguna = () => {
-    const { id } = useParams(); // Mendapatkan ID dari URL
     const navigate = useNavigate();
     const [users, setUsers] = useState([]);
 

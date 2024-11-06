@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Button from '../common/Button';
 import Option from '../common/Option';
 import { auth, db } from "../firebase"; // Firebase configuration and initialization
@@ -16,7 +16,6 @@ const Akses = () => {
     password: '',
     role: ''
   });
-  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   // Data Kategori untuk Role pengguna

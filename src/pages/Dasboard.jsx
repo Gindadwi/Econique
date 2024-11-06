@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Cart from '../component/Cart';
-import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { collection, getDocs, } from "firebase/firestore";
 import { db } from "../firebase";
 //Mengambil data dari firestore
-import Hapus from '../assets/delete.png'
 import { formatDistanceToNow } from "date-fns"; // Install this package using `npm install date-fns`
 import { ImCheckmark, ImCalendar, ImCross } from "react-icons/im";
 
