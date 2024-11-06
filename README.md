@@ -1,5 +1,7 @@
 # Project Reservasi Daily Check list Kegiatan
-project ini bertujuan untuk memudahkan dalam memanajemen mengelola reservasi kegiatan boking di Econique Palawi
+project ini bertujuan untuk memudahkan dalam memanajemen dalm mengelola reservasi kegiatan boking di Econique 
+PT Perhutani Alam Wisata Resorsis Klaster Banyumas
+
 
 
 ## Prasyarat
