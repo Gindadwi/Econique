@@ -36,7 +36,7 @@ npx tailwindcss init -p
 - npm install react-datepicker
 
 ##  8. date fns digunakan untuk memanipulasi tanggal
-- npm install date-fns
+```bash npm install date-fns
 
 
 
