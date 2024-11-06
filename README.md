@@ -33,7 +33,7 @@ npx tailwindcss init -p
 ### 7. cara install Date Picker (untuk menampilkan tanggal yang di pilih)
 - npm install react-datepicker
 
-##  date fns digunakan untuk memanipulasi tanggal
+##  8. date fns digunakan untuk memanipulasi tanggal
 - npm install date-fns
 
 
