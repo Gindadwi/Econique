@@ -288,37 +288,36 @@ const Reservasi = () => {
 
 
   //Membuat kode hapus data 
+  // const handleDelete = (id) => {
+  //   Swal.fire({
+  //     title: 'Apakah Anda yakin?',
+  //     text: 'Data yang dihapus tidak dapat dikembalikan!',
+  //     icon: 'warning',
+  //     showCancelButton: true,
+  //     confirmButtonColor: '#3085d6',
+  //     cancelButtonColor: '#d33',
+  //     confirmButtonText: 'Ya, Hapus!',
+  //     cancelButtonText: 'Batal',
+  //   }).then(async (result) => {
+  //     if (result.isConfirmed) {
+  //       try {
+  //         await axios.delete(
+  //           `https://econique-perhutani-default-rtdb.firebaseio.com/ReservasiKegiatan/${id}.json?auth=oahZAHcmPhj9gDp0HdkDFaCuGRt2pPZrX05YsdIl`
+  //         );
+  //         toast.success('Data berhasil dihapus'); // Notifikasi jika berhasil
 
-  const handleDelete = (id) => {
-    Swal.fire({
-      title: 'Apakah Anda yakin?',
-      text: 'Data yang dihapus tidak dapat dikembalikan!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Ya, Hapus!',
-      cancelButtonText: 'Batal',
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await axios.delete(
-            `https://econique-perhutani-default-rtdb.firebaseio.com/ReservasiKegiatan/${id}.json?auth=oahZAHcmPhj9gDp0HdkDFaCuGRt2pPZrX05YsdIl`
-          );
-          toast.success('Data berhasil dihapus'); // Notifikasi jika berhasil
+  //         // Update state tanpa data yang dihapus
+  //         setReservasiData((prevData) => prevData.filter((item) => item.id !== id));
+  //         setFilterData((prevData) => prevData.filter((item) => item.id !== id));
 
-          // Update state tanpa data yang dihapus
-          setReservasiData((prevData) => prevData.filter((item) => item.id !== id));
-          setFilterData((prevData) => prevData.filter((item) => item.id !== id));
-
-          Swal.fire('Terhapus!', 'Data berhasil dihapus.', 'success');
-        } catch (error) {
-          console.error('Error deleting data:', error);
-          toast.error('Gagal menghapus data'); // Notifikasi jika gagal
-        }
-      }
-    });
-  };
+  //         Swal.fire('Terhapus!', 'Data berhasil dihapus.', 'success');
+  //       } catch (error) {
+  //         console.error('Error deleting data:', error);
+  //         toast.error('Gagal menghapus data'); // Notifikasi jika gagal
+  //       }
+  //     }
+  //   });
+  // };
 
 
 
@@ -407,6 +406,7 @@ const Reservasi = () => {
             <thead className='bg-blue-700 text-black sticky top-0 z-10'>
               <tr>
                 <th className='min-w-[150px] whitespace-nowrap px-5 py-2 font-outfit font-semibold lg:font-semibold text-center'>Tanggal Mulai</th>
+                <th className='min-w-[150px] whitespace-nowrap px-5 py-2 font-outfit font-semibold lg:font-semibold text-center'>Tanggal Selesai</th>
                 <th className='min-w-[150px] whitespace-nowrap px-5 py-2 font-outfit font-semibold lg:font-semibold text-left'>Nama</th>
                 <th className='min-w-[150px] whitespace-nowrap px-5 py-2 font-outfit font-semibold lg:font-semibold text-left'>Institusi/Instansi/Corporate<br />/Komunitas</th>
                 <th className='min-w-[150px] whitespace-nowrap px-5 py-2 font-outfit font-semibold lg:font-semibold text-left'>Daftar Gorup</th>
@@ -426,6 +426,7 @@ const Reservasi = () => {
               {filterData.map((reservasi, index) => (
                 <tr key={reservasi.id} className={index % 2 === 0 ? 'bg-green-100' : 'bg-white'}>
                   <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap text-left'>{reservasi.startDate}</td>
+                  <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap text-left'>{reservasi.finishDate}</td>
                   <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap text-left'>{reservasi.namaCustomer}</td>
                   <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap text-left'>{reservasi.selectedOption}</td>
                   <td className='px-5 py-2 lg:w-auto min-w-[150px] whitespace-nowrap text-left'>{reservasi.instansiKeluarga}</td>
@@ -446,9 +447,9 @@ const Reservasi = () => {
                     <button className='flex gap-2 bg-green-700 items-center text-white font-poppins py-1 px-2 rounded-lg' onClick={() => Navigate(`/detailData/${reservasi.id}`)}>
                       <span className=''>{<HiEye />}</span>Detail
                     </button>
-                    <button className='flex gap-2 bg-orange-500 items-center text-white font-poppins py-1 px-2 rounded-lg' onClick={() => handleDelete(reservasi.id)}>
+                    {/* <button className='flex gap-2 bg-orange-500 items-center text-white font-poppins py-1 px-2 rounded-lg' onClick={() => handleDelete(reservasi.id)}>
                       <span className=''>{<HiOutlineTrash />}</span>Hapus
-                    </button>
+                    </button> */}
                   </td>
                 </tr>
               ))}

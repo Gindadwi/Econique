@@ -17,6 +17,7 @@ import ReservasiUsers from './Users/ReservasiUsers'
 import DetailPengguna from './pages/DetailPengguna'
 import UpdateUserForm from './pages/UpdatePengguna';
 import Reservasiadmin from './Admin/ReservasiAdmin';
+import Footer from './component/Footer'
 
 function App() {
   const location = useLocation();
@@ -62,6 +63,8 @@ function App() {
           <Route path="/reservasiAdmin" element={<Reservasiadmin />}/>        
         </Routes>      
       </div>
+
+
       
     </div>
   )

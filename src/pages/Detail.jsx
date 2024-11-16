@@ -130,7 +130,10 @@ export default function Detail() {
       sales,
       selectedOption,
       selectedStatus,
-      wisata,
+      wisata: {
+        namaWisata: wisata.wisata.label,
+        tempatWisata: wisata.tempat.map(t => t.label),
+      },
     };
 
     try {
@@ -148,7 +151,7 @@ export default function Detail() {
 
   return (
     <>
-      <div className="relative w-full max-w-[1180px] h-screen overflow-y-auto overflow-x-hidden">
+      <div className="relative h-screen overflow-x-hidden">
         {/* Header */}
         <div className='bg-white w-screen lg:w-screen items-center justify-start flex p-4 h-[63px] lg:sticky lg:top-0 lg:z-10 hidden lg:block'>
           <h1 className='font-outfit text-[18px] lg:text-2xl font-medium hidden lg:block'>Detail Data</h1>
@@ -321,7 +324,7 @@ export default function Detail() {
                 <input type="text"
                   value={jumlahPeserta}
                   onChange={(e) => setJumlahPeserta(e.target.value)}
-                  className='w-full lg:w-80  h-14 rounded-md px-3 font-outfit border border-1 border-black'
+                  className='w-full h-14 rounded-md px-3 font-outfit border border-1 border-black'
                   placeholder='Masukan Jumlah Peserta' />
               </div>
               <div className='flex flex-col'>

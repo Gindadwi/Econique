@@ -112,10 +112,10 @@ export default function Dashboard() {
 
 
     return (
-        <div className="relative w-full overflow-y-auto h-screen ">
+        <div className="relative w-full overflow-y-auto overflow-x-hidden h-screen ">
             {/* Header */}
             <div className='lg:bg-white lg:w-screen lg:items-center lg:justify-start lg:flex lg:p-4 lg:h-[63px] lg:sticky lg:top-0 lg:z-10 shadow-lg'>
-                <h1 className='font-outfit text-[18px] lg:text-2xl font-medium hidden lg:block'>Dashboard </h1>
+                <h1 className='font-outfit text-[18px] lg:text-2xl font-medium hidden lg:block'>Dashboard Super Admin</h1>
             </div>
 
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 justify-center items-center px-4 mt-5">
@@ -189,9 +189,9 @@ export default function Dashboard() {
             </div>
 
 
-            <div className="mt-3 flex flex-col lg:grid  lg:grid-cols-2 gap-2 px-4 lg:px-0 mb-20 lg:mb-5">
+            <div className="mt-3 flex flex-col lg:grid  lg:grid-cols-2 gap-2 lg:gap-0 px-4 lg:px-0 mb-20 lg:mb-5 ">
                 <Cart />
-                <div className="bg-white shadow-lg rounded-lg max-w-lg lg:max-w-lg lg:h-[435px] pb-8 px-6">
+                <div className="bg-white shadow-lg rounded-lg max-w-lg lg:max-w-full lg:mx-4 lg:h-[435px] pb-8 px-6">
                     <h2 className="text-[20px] font-poppins font-semibold mt-4 mb-3">Daftar Pengguna</h2>
                     <div className="relative overflow-y-auto h-[300px] lg:h-[360px] space-y-2">
                         <ul className="flex flex-col gap-4">

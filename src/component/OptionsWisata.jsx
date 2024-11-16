@@ -58,14 +58,14 @@ export default function OptionWisata({ selectedWisata, setSelectedWisata }) {
     };
 
     return (
-        <div className="grid grid-cols-1 space-y-2">
+        <div className="relative grid grid-cols-1 lg:grid-cols-none 2xl:grid-cols-none space-y-2">
             {/* Dropdown untuk memilih wisata */}
             <Select
                 options={wisataOptions}
                 value={selectedWisata?.wisata || null}
                 onChange={handleWisataChange}
                 placeholder="Pilih Wisata"
-                className="w-full lg:w-80 h-14 rounded-md border-black"
+                className="w-full lg:w-80 2xl:w-[510px] h-14 rounded-md border-black"
                 styles={{
                     control: (base) => ({
                         ...base,
@@ -84,7 +84,7 @@ export default function OptionWisata({ selectedWisata, setSelectedWisata }) {
                     onChange={handleTempatChange}
                     isMulti
                     placeholder="Pilih Tempat"
-                    className="w-full lg:w-80 h-auto rounded-md border-black"
+                    className="w-full lg:w-80 2xl:w-[510px] h-auto rounded-md border-black"
                     styles={{
                         control: (base) => ({
                             ...base,

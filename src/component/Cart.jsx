@@ -81,7 +81,7 @@ const BarChartMobile = () => {
 
     return (
         <div className="w-full flex flex-col items-start  lg:px-4 lg:pb-4">
-            <div className="bg-white p-4 rounded-lg shadow-md w-full max-w-lg lg:max-w-lg">
+            <div className="bg-white p-4 rounded-lg shadow-md w-full max-w-lg lg:max-w-full">
                 <h2 className="text-lg font-semibold mb-4 text-center">Grafik Reservasi</h2>
 
                 <div className="mb-4 flex items-center space-x-4 ">
@@ -107,7 +107,7 @@ const BarChartMobile = () => {
                     className="w-full"
                     style={{
                         height: '300px', // Tinggi grafik default (mobile)
-                        maxWidth: '500px', // Maksimum lebar grafik (mobile)
+                        maxWidth: '750px', // Maksimum lebar grafik (mobile)
                     }}
                 >
                     <Bar

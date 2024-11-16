@@ -2,17 +2,94 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Cart from '../component/Cart';
+import { collection, getDocs, } from "firebase/firestore";
+import { db } from "../firebase";
+//Mengambil data dari firestore
+import { formatDistanceToNow } from "date-fns"; // Install this package using `npm install date-fns`
 import { ImCheckmark, ImCalendar, ImCross } from "react-icons/im";
-
 
 export default function Dashboard() {
     const [totalOmzet, setTotalOmzet] = useState(0);
     const [fiks, setFiks] = useState(0);
     const [reschedule, setReschedule] = useState(0);
     const [Batal, setBatal] = useState(0);
+    const [users, setUsers] = useState([]);
     const [availableYears, setAvailableYears] = useState([]);
     const [selectedYear, setSelectedYear] = useState("");
     const [selectedMonth, setSelectedMonth] = useState("");
+
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('https://econique-perhutani-default-rtdb.firebaseio.com/ReservasiKegiatan.json?auth=oahZAHcmPhj9gDp0HdkDFaCuGRt2pPZrX05YsdIl');
+            const data = response.data;
+
+            let fiksCount = 0;
+            let rescheduleCount = 0;
+            let BatalCount = 0;
+            let filteredOmzet = 0;
+            const yearsSet = new Set(); // Untuk menyimpan tahun yang unik
+
+            Object.values(data).forEach(item => {
+                const itemDate = new Date(item.startDate);
+                const itemYear = itemDate.getFullYear();
+                const itemMonth = (itemDate.getMonth() + 1).toString().padStart(2, '0'); // Memastikan bulan memiliki dua digit
+
+                // Tambahkan tahun ke dalam set
+                yearsSet.add(itemYear);
+
+                // Periksa apakah item cocok dengan tahun dan bulan yang dipilih
+                if ((!selectedYear || selectedYear === itemYear.toString()) &&
+                    (!selectedMonth || selectedMonth === itemMonth)) {
+                    // Jumlahkan omzet untuk item yang difilter
+                    filteredOmzet += parseFloat(item.omzet.replace(/\./g, '')) || 0;
+
+                    // Perbarui hitungan berdasarkan status
+                    if (item.selectedStatus === "Fiks") fiksCount++;
+                    else if (item.selectedStatus === "Reschedule") rescheduleCount++;
+                    else if (item.selectedStatus === "Batal") BatalCount++;
+                }
+            });
+
+            setTotalOmzet(filteredOmzet);
+            setFiks(fiksCount);
+            setReschedule(rescheduleCount);
+            setBatal(BatalCount);
+
+            // Ubah yearsSet menjadi array dan set status availableYears
+            setAvailableYears(Array.from(yearsSet).map(year => ({ value: year.toString(), label: year.toString() })));
+
+        } catch (error) {
+            console.error("Error fetching data: ", error);
+            toast.error("Gagal mengambil data");
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, [selectedYear, selectedMonth]); // Re-fetch data when selected year or month changes
+
+
+    // Fetch data users dari Firestore
+    useEffect(() => {
+        const fetchDataUser = async () => {
+            try {
+                const querySnapShot = await getDocs(collection(db, "users"));
+                const userData = querySnapShot.docs.map(doc => ({
+                    id: doc.id, // Simpan ID dengan benar
+                    ...doc.data(),
+                    lastLoginAgo: doc.data().lastLogin
+                        ? formatDistanceToNow(new Date(doc.data().lastLogin.seconds * 1000), { addSuffix: true })
+                        : 'Belum pernah login'
+                }));
+
+                setUsers(userData);
+            } catch (error) {
+                console.log('Error fetching data:', error);
+            }
+        };
+
+        fetchDataUser();
+    }, []);
 
 
     //Membuat filter berdasarkan tahun dan bulan untuk total omzet
@@ -32,62 +109,12 @@ export default function Dashboard() {
     ];
 
 
-    // Fungsi untuk mengambil data
-    const fetchData = async () => {
-        try {
-            const response = await axios.get('https://econique-perhutani-default-rtdb.firebaseio.com/ReservasiKegiatan.json?auth=oahZAHcmPhj9gDp0HdkDFaCuGRt2pPZrX05YsdIl');
-            const data = response.data;
 
-            // Inisialisasi variabel penghitung
-            let fiksCount = 0;
-            let rescheduleCount = 0;
-            let BatalCount = 0;
-            let filteredOmzet = 0;
-            const yearsSet = new Set(); //untuk menyimpan tahun yang unik
-
-            Object.values(data).forEach(item => {
-                const itemDate = new Date (item.startDate);
-                const itemYear = itemDate.getFullYear();
-                const itemMonth = (itemDate.getMonth() + 1).toString().padStart(2, '0') //memastikan bulan memiliki dua digit
-
-                //Tambahkan tahun ke dalam set 
-                yearsSet.add(itemYear)
-                //memeriksa apakah otem cocok dengan tahun dan bulan yang dipilih
-                if ((!selectedYear || selectedYear === itemYear.toString()) && 
-                    (!selectedMonth || selectedMonth == itemMonth)) {
-                    //jumlah omzet untuk item yang di filter
-                    filteredOmzet += parseFloat (item.omzet.replace(/\./g,'')) || 0;
-                    
-                    //menghitung berdasarkan status
-                    if (item.selectedStatus === "Fiks") fiksCount++;
-                    else if (item.selectedStatus === "Reschedule") rescheduleCount++;
-                    else if (item.selectedStatus === "Batal") BatalCount++;
-                }
-            });
-
-            setTotalOmzet(filteredOmzet);
-            setFiks(fiksCount);
-            setReschedule(rescheduleCount);
-            setBatal(BatalCount);
-
-
-            //ubah yearset menjadi array dan set status availableYears
-            setAvailableYears (Array.from(yearsSet).map(year => ({value: year.toString(), label: year.toString() })));
-
-        } catch (error) {
-            console.error("Error fetching data: ", error);
-            toast.error("Gagal mengambil data");
-        }
-    };
-
-    useEffect(() => {
-        fetchData();
-    }, [selectedYear, selectedMonth]);
 
     return (
-        <div className="relative w-full max-w-[1080px] ">
+        <div className="relative w-full overflow-y-auto overflow-x-hidden h-screen ">
             {/* Header */}
-            <div className='bg-white w-screen lg:w-screen items-center justify-start flex p-4 h-[63px] lg:sticky lg:top-0 lg:z-10 hidden lg:block'>
+            <div className='lg:bg-white lg:w-screen lg:items-center lg:justify-start lg:flex lg:p-4 lg:h-[63px] lg:sticky lg:top-0 lg:z-10 shadow-lg'>
                 <h1 className='font-outfit text-[18px] lg:text-2xl font-medium hidden lg:block'>Dashboard Admin</h1>
             </div>
 
@@ -160,8 +187,11 @@ export default function Dashboard() {
                     </p>
                 </div>
             </div>
-            <div className="mt-3 px-4">
+
+
+            <div className="mt-3 flex flex-col lg:grid  lg:grid-cols-2 gap-2 px-4 lg:px-0 mb-20 lg:mb-5">
                 <Cart />
+
             </div>
 
         </div>

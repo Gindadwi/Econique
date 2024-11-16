@@ -85,7 +85,7 @@ const DetailPengguna = () => {
     };
 
     return (
-        <div className="relative w-full max-w-[1080px]">
+        <div className="relative overflow-x-hidden">
             {/* Header */}
             <div className='lg:bg-white lg:w-screen lg:items-center lg:justify-start lg:flex lg:p-4 lg:h-[63px] lg:sticky lg:top-0 lg:z-10 shadow-lg'>
                 <h1 className='font-outfit text-[18px] lg:text-2xl font-medium hidden lg:block'>Detail Pengguna</h1>

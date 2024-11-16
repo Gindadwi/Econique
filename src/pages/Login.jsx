@@ -6,7 +6,7 @@ import { Icon } from '@iconify/react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { auth, db } from "../firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, } from "firebase/auth";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import Swal from 'sweetalert2';
 
@@ -19,23 +19,17 @@ export default function Login() {
     const handleLogin = async (e) => {
         e.preventDefault();
 
-
-
         try {
             const usersRef = collection(db, "users");
             const q = query(usersRef, where("namaLengkap", "==", namaLengkap));
             const querySnapshot = await getDocs(q);
-
-            console.log('Query Snapshot:', querySnapshot); // Debug
 
             if (querySnapshot.empty) {
                 toast.error('Pengguna tidak ditemukan.');
                 return;
             };
 
-
             const userData = querySnapshot.docs[0].data();
-            console.log('User Data:', userData); // Debug
 
             await signInWithEmailAndPassword(auth, userData.email, password);
 
@@ -121,9 +115,11 @@ export default function Login() {
                         name="Login"
                         className='w-full bg-blue-500 hover:bg-blue-600 text-white rounded-lg py-2 lg:py-3 font-poppins font-medium transition duration-300 ease-in-out'
                     />
+
                 </form>
             </div>
-        </div>
 
+            
+        </div>
     );
 }
